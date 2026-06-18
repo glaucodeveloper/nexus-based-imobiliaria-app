@@ -1,0 +1,224 @@
+{
+  "properties": [
+    {
+      "id": "alphaville",
+      "title": "Casa em Condominio Alphaville",
+      "type": "Casa a venda",
+      "kind": "Casa",
+      "city": "Alphaville, Camacari/BA",
+      "cityName": "Camacari",
+      "neighborhood": "Alphaville",
+      "price": "R$ 1.850.000",
+      "priceNumber": 1850000,
+      "bedrooms": 4,
+      "area": 320,
+      "meta": ["4 quartos", "5 banheiros", "4 vagas", "320m2"],
+      "tag": "Destaque",
+      "image": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=82"
+    },
+    {
+      "id": "jardim-armacao",
+      "title": "Apartamento no Jardim Armacao",
+      "type": "Apartamento a venda",
+      "kind": "Apartamento",
+      "city": "Jardim Armacao, Salvador/BA",
+      "cityName": "Salvador",
+      "neighborhood": "Jardim Armacao",
+      "price": "R$ 650.000",
+      "priceNumber": 650000,
+      "bedrooms": 3,
+      "area": 98,
+      "meta": ["3 quartos", "2 banheiros", "2 vagas", "98m2"],
+      "tag": "Com vista",
+      "image": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=900&q=82"
+    },
+    {
+      "id": "vilarejo",
+      "title": "Casa no Vilarejo",
+      "type": "Casa a venda",
+      "kind": "Casa",
+      "city": "Vilarejo, Lauro de Freitas/BA",
+      "cityName": "Lauro de Freitas",
+      "neighborhood": "Vilarejo",
+      "price": "R$ 790.000",
+      "priceNumber": 790000,
+      "bedrooms": 3,
+      "area": 180,
+      "meta": ["3 quartos", "3 banheiros", "2 vagas", "180m2"],
+      "tag": "Novo",
+      "image": "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=82"
+    },
+    {
+      "id": "busca-vida",
+      "title": "Terreno em Busca Vida",
+      "type": "Terreno a venda",
+      "kind": "Terreno",
+      "city": "Busca Vida, Camacari/BA",
+      "cityName": "Camacari",
+      "neighborhood": "Busca Vida",
+      "price": "R$ 470.000",
+      "priceNumber": 470000,
+      "bedrooms": 0,
+      "area": 450,
+      "meta": ["450m2", "lote plano", "condominio"],
+      "tag": "Oportunidade",
+      "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=82"
+    },
+    {
+      "id": "cobertura-barra",
+      "title": "Cobertura Vista Mar na Barra",
+      "type": "Cobertura a venda",
+      "kind": "Cobertura",
+      "city": "Barra, Salvador/BA",
+      "cityName": "Salvador",
+      "neighborhood": "Barra",
+      "price": "R$ 1.250.000",
+      "priceNumber": 1250000,
+      "bedrooms": 4,
+      "area": 210,
+      "meta": ["4 quartos", "4 banheiros", "3 vagas", "210m2"],
+      "tag": "Vista mar",
+      "image": "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=900&q=82"
+    },
+    {
+      "id": "studio-caminho",
+      "title": "Studio no Caminho das Arvores",
+      "type": "Apartamento a venda",
+      "kind": "Apartamento",
+      "city": "Caminho das Arvores, Salvador/BA",
+      "cityName": "Salvador",
+      "neighborhood": "Caminho das Arvores",
+      "price": "R$ 420.000",
+      "priceNumber": 420000,
+      "bedrooms": 1,
+      "area": 48,
+      "meta": ["1 quarto", "1 banheiro", "1 vaga", "48m2"],
+      "tag": "Compacto",
+      "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=82"
+    },
+    {
+      "id": "casa-ipitanga",
+      "title": "Casa Familiar em Ipitanga",
+      "type": "Casa a venda",
+      "kind": "Casa",
+      "city": "Ipitanga, Lauro de Freitas/BA",
+      "cityName": "Lauro de Freitas",
+      "neighborhood": "Ipitanga",
+      "price": "R$ 690.000",
+      "priceNumber": 690000,
+      "bedrooms": 3,
+      "area": 160,
+      "meta": ["3 quartos", "2 banheiros", "2 vagas", "160m2"],
+      "tag": "Familia",
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=82"
+    },
+    {
+      "id": "sala-comercial-pituba",
+      "title": "Sala Comercial na Pituba",
+      "type": "Sala comercial a venda",
+      "kind": "Sala comercial",
+      "city": "Pituba, Salvador/BA",
+      "cityName": "Salvador",
+      "neighborhood": "Pituba",
+      "price": "R$ 350.000",
+      "priceNumber": 350000,
+      "bedrooms": 0,
+      "area": 62,
+      "meta": ["62m2", "1 banheiro", "1 vaga", "empresarial"],
+      "tag": "Comercial",
+      "image": "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=82"
+    },
+    {
+      "id": "terreno-jaua",
+      "title": "Terreno em Jaua",
+      "type": "Terreno a venda",
+      "kind": "Terreno",
+      "city": "Jaua, Camacari/BA",
+      "cityName": "Camacari",
+      "neighborhood": "Jaua",
+      "price": "R$ 290.000",
+      "priceNumber": 290000,
+      "bedrooms": 0,
+      "area": 600,
+      "meta": ["600m2", "lote plano", "perto da praia"],
+      "tag": "Praia",
+      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=82"
+    }
+  ],
+  "brokers": [
+    {
+      "name": "Joao Almeida",
+      "phone": "(71) 99999-0001",
+      "photo": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=240&q=80",
+      "creci": "CRECI 12345"
+    },
+    {
+      "name": "Mariana Santos",
+      "phone": "(71) 99999-0002",
+      "photo": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=80",
+      "creci": "CRECI 22334"
+    },
+    {
+      "name": "Carlos Mendes",
+      "phone": "(71) 99999-0003",
+      "photo": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=240&q=80",
+      "creci": "CRECI 33445"
+    },
+    {
+      "name": "Juliana Oliveira",
+      "phone": "(71) 99999-0004",
+      "photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=240&q=80",
+      "creci": "CRECI 44556"
+    }
+  ],
+  "dashboard": {
+    "metrics": [
+      { "label": "Total de imoveis", "value": "56" },
+      { "label": "Imoveis ativos", "value": "42", "color": "#1f9b61" },
+      { "label": "Leads", "value": "128" },
+      { "label": "Visitas este mes", "value": "1.245" }
+    ],
+    "activities": [
+      { "icon": "A", "title": "Novo lead recebido", "detail": "Apartamento no Jardim Armacao", "time": "Hoje, 10:23", "color": "var(--gold)" },
+      { "icon": "G", "title": "Agendamento confirmado", "detail": "Visita - Casa no Vilarejo", "time": "Hoje, 09:15", "color": "#24a45a" },
+      { "icon": "N", "title": "Novo imovel publicado", "detail": "Casa em Alphaville", "time": "Ontem", "color": "#d48a1d" },
+      { "icon": "C", "title": "Cliente reativado", "detail": "Juliana Oliveira pediu retorno", "time": "Ontem, 17:40", "color": "#4d7bd6" }
+    ],
+    "leads": [
+      { "name": "Lucas Andrade", "source": "Landing page home", "interest": "Casa em Condominio Alphaville", "stage": "Quente" },
+      { "name": "Patricia Souza", "source": "WhatsApp", "interest": "Apartamento no Jardim Armacao", "stage": "Em visita" },
+      { "name": "Rafael Lima", "source": "Formulario de anuncio", "interest": "Casa no Vilarejo", "stage": "Qualificando" },
+      { "name": "Helena Prado", "source": "Quiz mobile", "interest": "Terreno em Busca Vida", "stage": "Novo" }
+    ],
+    "clients": [
+      { "name": "Mariana Costa", "profile": "Compradora", "focus": "3 quartos em Salvador", "owner": "Joao Almeida" },
+      { "name": "Eduardo Nunes", "profile": "Investidor", "focus": "Imoveis acima de R$ 1,2 mi", "owner": "Carlos Mendes" },
+      { "name": "Bianca Ramos", "profile": "Locataria", "focus": "Apartamento compacto", "owner": "Juliana Oliveira" },
+      { "name": "Fernando Pires", "profile": "Proprietario", "focus": "Captacao no litoral", "owner": "Mariana Santos" }
+    ],
+    "appointments": [
+      { "date": "19/06 - 09:30", "client": "Lucas Andrade", "property": "Casa em Condominio Alphaville", "broker": "Joao Almeida" },
+      { "date": "19/06 - 14:00", "client": "Patricia Souza", "property": "Apartamento no Jardim Armacao", "broker": "Mariana Santos" },
+      { "date": "20/06 - 11:00", "client": "Eduardo Nunes", "property": "Casa no Vilarejo", "broker": "Carlos Mendes" },
+      { "date": "20/06 - 16:30", "client": "Helena Prado", "property": "Terreno em Busca Vida", "broker": "Juliana Oliveira" }
+    ],
+    "messages": [
+      { "from": "Site institucional", "subject": "Pedido de retorno comercial", "status": "Nao lida" },
+      { "from": "WhatsApp", "subject": "Cliente quer simular financiamento", "status": "Respondida" },
+      { "from": "Formulario de anuncio", "subject": "Novo imovel para avaliacao", "status": "Triagem" },
+      { "from": "Instagram", "subject": "Pergunta sobre taxa de corretagem", "status": "Nao lida" }
+    ],
+    "reports": [
+      { "title": "Conversao de leads", "value": "18%", "note": "Alta de 3 pontos na semana" },
+      { "title": "Tempo medio ate visita", "value": "2,4 dias", "note": "Melhor janela em 30 dias" },
+      { "title": "Imoveis com maior intencao", "value": "Casas premium", "note": "Alphaville e Busca Vida lideram" },
+      { "title": "Canal com melhor custo", "value": "WhatsApp", "note": "Maior taxa de resposta organica" }
+    ],
+    "settings": [
+      { "label": "Aprovacao manual de novos anuncios", "value": "Ativada" },
+      { "label": "Aviso de lead quente por e-mail", "value": "Ativado" },
+      { "label": "Sincronizacao com CRM externo", "value": "Planejada" },
+      { "label": "Relatorio semanal para diretoria", "value": "Toda segunda, 08:00" }
+    ]
+  }
+}

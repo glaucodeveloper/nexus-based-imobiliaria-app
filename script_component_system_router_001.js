@@ -4,7 +4,7 @@
   const STYLE_ID = "suaimobiliaria-component-system-style";
   const ROUTES = ["home", "destaques", "comprar", "imovel", "anuncie", "login", "dashboard", "contato"];
 
-  const properties = [
+  let properties = [
     {
       id: "alphaville",
       title: "Casa em Condomínio Alphaville",
@@ -151,93 +151,109 @@
     },
   ];
 
-  const brokers = [
-    ["João Almeida", "(71) 99999-0001", "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=240&q=80"],
-    ["Mariana Santos", "(71) 99999-0002", "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=80"],
-    ["Carlos Mendes", "(71) 99999-0003", "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=240&q=80"],
-    ["Juliana Oliveira", "(71) 99999-0004", "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=240&q=80"],
+  let brokers = [
+    {
+      name: "Joao Almeida",
+      phone: "(71) 99999-0001",
+      photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=240&q=80",
+      creci: "CRECI 12345",
+    },
+    {
+      name: "Mariana Santos",
+      phone: "(71) 99999-0002",
+      photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=80",
+      creci: "CRECI 22334",
+    },
+    {
+      name: "Carlos Mendes",
+      phone: "(71) 99999-0003",
+      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=240&q=80",
+      creci: "CRECI 33445",
+    },
+    {
+      name: "Juliana Oliveira",
+      phone: "(71) 99999-0004",
+      photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=240&q=80",
+      creci: "CRECI 44556",
+    },
   ];
 
+  let dashboardContent = {
+    metrics: [
+      { label: "Total de imoveis", value: "56" },
+      { label: "Imoveis ativos", value: "42", color: "#1f9b61" },
+      { label: "Leads", value: "128" },
+      { label: "Visitas este mes", value: "1.245" },
+    ],
+    activities: [
+      { icon: "A", title: "Novo lead recebido", detail: "Apartamento no Jardim Armacao", time: "Hoje, 10:23", color: "var(--gold)" },
+      { icon: "G", title: "Agendamento confirmado", detail: "Visita - Casa no Vilarejo", time: "Hoje, 09:15", color: "#24a45a" },
+      { icon: "N", title: "Novo imovel publicado", detail: "Casa em Alphaville", time: "Ontem", color: "#d48a1d" },
+      { icon: "C", title: "Cliente reativado", detail: "Juliana Oliveira pediu retorno", time: "Ontem, 17:40", color: "#4d7bd6" },
+    ],
+    leads: [
+      { name: "Lucas Andrade", source: "Landing page home", interest: "Casa em Condominio Alphaville", stage: "Quente" },
+      { name: "Patricia Souza", source: "WhatsApp", interest: "Apartamento no Jardim Armacao", stage: "Em visita" },
+      { name: "Rafael Lima", source: "Formulario de anuncio", interest: "Casa no Vilarejo", stage: "Qualificando" },
+      { name: "Helena Prado", source: "Quiz mobile", interest: "Terreno em Busca Vida", stage: "Novo" },
+    ],
+    clients: [
+      { name: "Mariana Costa", profile: "Compradora", focus: "3 quartos em Salvador", owner: "Joao Almeida" },
+      { name: "Eduardo Nunes", profile: "Investidor", focus: "Imoveis acima de R$ 1,2 mi", owner: "Carlos Mendes" },
+      { name: "Bianca Ramos", profile: "Locataria", focus: "Apartamento compacto", owner: "Juliana Oliveira" },
+      { name: "Fernando Pires", profile: "Proprietario", focus: "Captacao no litoral", owner: "Mariana Santos" },
+    ],
+    appointments: [
+      { date: "19/06 - 09:30", client: "Lucas Andrade", property: "Casa em Condominio Alphaville", broker: "Joao Almeida" },
+      { date: "19/06 - 14:00", client: "Patricia Souza", property: "Apartamento no Jardim Armacao", broker: "Mariana Santos" },
+      { date: "20/06 - 11:00", client: "Eduardo Nunes", property: "Casa no Vilarejo", broker: "Carlos Mendes" },
+      { date: "20/06 - 16:30", client: "Helena Prado", property: "Terreno em Busca Vida", broker: "Juliana Oliveira" },
+    ],
+    messages: [
+      { from: "Site institucional", subject: "Pedido de retorno comercial", status: "Nao lida" },
+      { from: "WhatsApp", subject: "Cliente quer simular financiamento", status: "Respondida" },
+      { from: "Formulario de anuncio", subject: "Novo imovel para avaliacao", status: "Triagem" },
+      { from: "Instagram", subject: "Pergunta sobre taxa de corretagem", status: "Nao lida" },
+    ],
+    reports: [
+      { title: "Conversao de leads", value: "18%", note: "Alta de 3 pontos na semana" },
+      { title: "Tempo medio ate visita", value: "2,4 dias", note: "Melhor janela em 30 dias" },
+      { title: "Imoveis com maior intencao", value: "Casas premium", note: "Alphaville e Busca Vida lideram" },
+      { title: "Canal com melhor custo", value: "WhatsApp", note: "Maior taxa de resposta organica" },
+    ],
+    settings: [
+      { label: "Aprovacao manual de novos anuncios", value: "Ativada" },
+      { label: "Aviso de lead quente por e-mail", value: "Ativado" },
+      { label: "Sincronizacao com CRM externo", value: "Planejada" },
+      { label: "Relatorio semanal para diretoria", value: "Toda segunda, 08:00" },
+    ],
+  };
+
+  function cmsConfig() {
+    return window.SuaImobiliariaCmsConfig || { dataUrl: "./cms-imobiliaria/data/site.json" };
+  }
+
+  function applyCmsData(data) {
+    if (Array.isArray(data?.properties) && data.properties.length) properties = data.properties;
+    if (Array.isArray(data?.brokers) && data.brokers.length) brokers = data.brokers;
+    if (data?.dashboard && typeof data.dashboard === "object") {
+      dashboardContent = { ...dashboardContent, ...data.dashboard };
+    }
+  }
+
+  async function loadCmsData() {
+    const config = cmsConfig();
+    if (!config?.dataUrl) return;
+
+    const response = await fetch(config.dataUrl, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Nao foi possivel carregar o CMS em ${config.dataUrl}`);
+
+    applyCmsData(await response.json());
+    window.SuaImobiliariaCmsState = { source: config.dataUrl };
+  }
+
   function injectStyle() {
-    if (document.getElementById(STYLE_ID)) return;
-    const style = document.createElement("style");
-    style.id = STYLE_ID;
-    style.textContent = `:root {\n        --ink: #111815;\n        --coal: #0d1718;\n        --muted: #66716c;\n        --line: #e9ece8;\n        --paper: #ffffff;\n        --wash: #f7f6f1;\n        --cream: #fbf8ef;\n        --gold: #c9902d;\n        --gold-dark: #a87219;\n        --green: #25d366;\n        --shadow: 0 24px 60px rgba(17, 24, 21, 0.1);\n        --soft-shadow: 0 12px 36px rgba(17, 24, 21, 0.08);\n        --radius-xl: 28px;\n        --radius-lg: 18px;\n        --radius-md: 12px;\n        --font-display: Georgia, \"Times New Roman\", serif;\n        --font-body: \"Trebuchet MS\", \"Segoe UI\", sans-serif;\n      }\n\n      * {\n        box-sizing: border-box;\n      }\n\n      html {\n        scroll-behavior: smooth;\n      }\n\n      body {\n        margin: 0;\n        color: var(--ink);\n        background:\n          radial-gradient(circle at 12% 8%, rgba(201, 144, 45, 0.13), transparent 26rem),\n          linear-gradient(180deg, #fff 0%, var(--wash) 55%, #fff 100%);\n        font-family: var(--font-body);\n      }\n\n      button,\n      input,\n      select {\n        font: inherit;\n      }\n\n      button,\n      a {\n        -webkit-tap-highlight-color: transparent;\n      }\n\n      a {\n        color: inherit;\n        text-decoration: none;\n      }\n\n      img {\n        display: block;\n        max-width: 100%;\n      }\n\n      .app-shell {\n        overflow: hidden;\n      }\n\n      .container {\n        width: min(1180px, calc(100% - 40px));\n        margin: 0 auto;\n      }\n\n      .section {\n        padding: 78px 0;\n      }\n\n      .topbar {\n        position: fixed;\n        z-index: 20;\n        inset: 18px 0 auto;\n        width: min(1180px, calc(100% - 32px));\n        margin: 0 auto;\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        gap: 24px;\n        padding: 14px 18px;\n        border: 1px solid rgba(255, 255, 255, 0.2);\n        border-radius: 999px;\n        color: #fff;\n        background: rgba(8, 17, 20, 0.7);\n        backdrop-filter: blur(18px);\n        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);\n      }\n\n      .brand {\n        display: flex;\n        align-items: center;\n        gap: 10px;\n        font-weight: 800;\n        letter-spacing: -0.03em;\n      }\n\n      .brand-mark {\n        position: relative;\n        width: 32px;\n        height: 24px;\n      }\n\n      .brand-mark::before,\n      .brand-mark::after {\n        position: absolute;\n        content: \"\";\n        inset: auto 0 0;\n        height: 17px;\n        border: 4px solid var(--gold);\n        border-top: 0;\n        border-radius: 2px 2px 6px 6px;\n      }\n\n      .brand-mark::after {\n        inset: 1px 5px auto;\n        width: 18px;\n        height: 18px;\n        border: 4px solid var(--gold);\n        border-right: 0;\n        border-bottom: 0;\n        transform: rotate(45deg);\n        border-radius: 2px;\n      }\n\n      .nav {\n        display: flex;\n        align-items: center;\n        gap: 26px;\n        font-size: 14px;\n        font-weight: 700;\n      }\n\n      .nav a {\n        color: rgba(255, 255, 255, 0.82);\n      }\n\n      .nav a:hover {\n        color: #fff;\n      }\n\n      .pill-btn,\n      .gold-btn,\n      .ghost-btn {\n        border: 0;\n        cursor: pointer;\n        border-radius: 999px;\n        font-weight: 800;\n        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;\n      }\n\n      .pill-btn {\n        display: inline-flex;\n        align-items: center;\n        gap: 8px;\n        padding: 12px 18px;\n        color: var(--ink);\n        background: #fff;\n      }\n\n      .gold-btn {\n        color: #fff;\n        padding: 14px 22px;\n        background: linear-gradient(135deg, #dca642, var(--gold-dark));\n        box-shadow: 0 12px 22px rgba(201, 144, 45, 0.28);\n      }\n\n      .ghost-btn {\n        padding: 13px 20px;\n        border: 1px solid var(--line);\n        background: #fff;\n      }\n\n      .pill-btn:hover,\n      .gold-btn:hover,\n      .ghost-btn:hover {\n        transform: translateY(-2px);\n      }\n\n      .hero {\n        position: relative;\n        min-height: 770px;\n        color: #fff;\n        background:\n          linear-gradient(90deg, rgba(6, 13, 16, 0.95) 0%, rgba(6, 13, 16, 0.7) 42%, rgba(6, 13, 16, 0.18) 100%),\n          url(\"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=85\") center/cover;\n      }\n\n      .hero::after {\n        position: absolute;\n        content: \"\";\n        inset: auto 0 0;\n        height: 180px;\n        background: linear-gradient(180deg, transparent, rgba(247, 246, 241, 0.96));\n      }\n\n      .hero-content {\n        position: relative;\n        z-index: 1;\n        padding: 188px 0 88px;\n        width: min(700px, 100%);\n      }\n\n      .eyebrow {\n        display: inline-flex;\n        align-items: center;\n        gap: 9px;\n        margin-bottom: 20px;\n        color: #f5d597;\n        font-size: 13px;\n        font-weight: 900;\n        letter-spacing: 0.12em;\n        text-transform: uppercase;\n      }\n\n      .eyebrow::before {\n        content: \"\";\n        width: 34px;\n        height: 1px;\n        background: currentColor;\n      }\n\n      .hero h1,\n      .section-title h2,\n      .detail-copy h2,\n      .dashboard-head h2 {\n        margin: 0;\n        font-family: var(--font-display);\n        letter-spacing: -0.055em;\n      }\n\n      .hero h1 {\n        font-size: clamp(3.5rem, 8vw, 6.9rem);\n        line-height: 0.91;\n        max-width: 720px;\n      }\n\n      .hero p {\n        max-width: 520px;\n        margin: 26px 0 34px;\n        color: rgba(255, 255, 255, 0.82);\n        font-size: 1.08rem;\n        line-height: 1.8;\n      }\n\n      .search-panel {\n        width: min(930px, 100%);\n        padding: 18px;\n        border: 1px solid rgba(255, 255, 255, 0.2);\n        border-radius: var(--radius-lg);\n        background: rgba(255, 255, 255, 0.94);\n        box-shadow: var(--shadow);\n      }\n\n      .tabs {\n        display: flex;\n        gap: 8px;\n        margin-bottom: 14px;\n      }\n\n      .tab {\n        padding: 11px 24px;\n        border: 0;\n        border-radius: 999px;\n        color: var(--ink);\n        background: #eef0ed;\n        cursor: pointer;\n        font-weight: 800;\n      }\n\n      .tab.active {\n        color: #fff;\n        background: var(--coal);\n      }\n\n      .search-grid {\n        display: grid;\n        grid-template-columns: 1.7fr 1fr 1fr auto;\n        gap: 10px;\n      }\n\n      .field {\n        display: grid;\n        gap: 7px;\n        padding: 10px 13px;\n        border: 1px solid var(--line);\n        border-radius: 12px;\n        color: var(--muted);\n        background: #fff;\n        font-size: 12px;\n      }\n\n      .field strong {\n        color: var(--ink);\n        font-size: 13px;\n      }\n\n      .field input,\n      .field select {\n        width: 100%;\n        border: 0;\n        outline: 0;\n        color: var(--ink);\n        background: transparent;\n      }\n\n      .stats-strip {\n        position: relative;\n        z-index: 2;\n        transform: translateY(-48px);\n      }\n\n      .stats-grid {\n        display: grid;\n        grid-template-columns: repeat(4, 1fr);\n        gap: 16px;\n        padding: 18px;\n        border-radius: var(--radius-xl);\n        background: rgba(255, 255, 255, 0.96);\n        box-shadow: var(--soft-shadow);\n      }\n\n      .stat-card {\n        display: flex;\n        align-items: center;\n        gap: 14px;\n        padding: 18px;\n      }\n\n      .icon-box {\n        display: grid;\n        place-items: center;\n        flex: 0 0 48px;\n        width: 48px;\n        height: 48px;\n        border-radius: 16px;\n        color: var(--gold);\n        background: #fff3dc;\n        font-size: 22px;\n      }\n\n      .stat-card strong {\n        display: block;\n        font-size: 15px;\n      }\n\n      .stat-card span {\n        color: var(--muted);\n        font-size: 13px;\n      }\n\n      .section-title {\n        display: flex;\n        align-items: end;\n        justify-content: space-between;\n        gap: 24px;\n        margin-bottom: 28px;\n      }\n\n      .section-title h2,\n      .detail-copy h2,\n      .dashboard-head h2 {\n        font-size: clamp(2rem, 4vw, 3.8rem);\n      }\n\n      .section-title p {\n        max-width: 570px;\n        margin: 10px 0 0;\n        color: var(--muted);\n        line-height: 1.7;\n      }\n\n      .property-grid {\n        display: grid;\n        grid-template-columns: repeat(4, 1fr);\n        gap: 20px;\n      }\n\n      .property-card,\n      .filter-box,\n      .list-card,\n      .detail-panel,\n      .broker-card,\n      .dashboard-card,\n      .phone-card {\n        border: 1px solid var(--line);\n        border-radius: var(--radius-lg);\n        background: #fff;\n        box-shadow: var(--soft-shadow);\n      }\n\n      .property-card {\n        overflow: hidden;\n      }\n\n      .card-media {\n        position: relative;\n        height: 205px;\n        overflow: hidden;\n        background: #d8d8d0;\n      }\n\n      .card-media img {\n        width: 100%;\n        height: 100%;\n        object-fit: cover;\n        transition: transform 500ms ease;\n      }\n\n      .property-card:hover .card-media img,\n      .list-card:hover img {\n        transform: scale(1.05);\n      }\n\n      .badge {\n        display: inline-flex;\n        align-items: center;\n        padding: 7px 10px;\n        border-radius: 999px;\n        color: #fff;\n        background: rgba(14, 23, 24, 0.84);\n        font-size: 12px;\n        font-weight: 900;\n      }\n\n      .card-media .badge {\n        position: absolute;\n        top: 12px;\n        left: 12px;\n      }\n\n      .heart {\n        display: grid;\n        place-items: center;\n        width: 38px;\n        height: 38px;\n        border: 0;\n        border-radius: 50%;\n        color: #c42a2a;\n        background: rgba(255, 255, 255, 0.92);\n        cursor: pointer;\n      }\n\n      .card-media .heart {\n        position: absolute;\n        top: 12px;\n        right: 12px;\n      }\n\n      .property-body {\n        padding: 17px;\n      }\n\n      .property-type {\n        color: var(--muted);\n        font-size: 12px;\n        font-weight: 800;\n      }\n\n      .property-body h3,\n      .list-info h3 {\n        margin: 7px 0 6px;\n        letter-spacing: -0.03em;\n      }\n\n      .location,\n      .meta {\n        color: var(--muted);\n        font-size: 13px;\n      }\n\n      .meta {\n        display: flex;\n        flex-wrap: wrap;\n        gap: 12px;\n        margin: 14px 0;\n      }\n\n      .price {\n        font-size: 18px;\n        font-weight: 900;\n        letter-spacing: -0.02em;\n      }\n\n      .ad-banner {\n        display: grid;\n        grid-template-columns: 0.95fr 1.65fr;\n        min-height: 260px;\n        overflow: hidden;\n        margin-top: 62px;\n        border-radius: var(--radius-xl);\n        background: var(--coal);\n        box-shadow: var(--shadow);\n      }\n\n      .ad-copy {\n        padding: 42px;\n        color: #fff;\n      }\n\n      .ad-copy h3 {\n        margin: 0 0 14px;\n        font-family: var(--font-display);\n        font-size: 2.2rem;\n        line-height: 1;\n      }\n\n      .ad-copy p {\n        color: rgba(255, 255, 255, 0.72);\n        line-height: 1.7;\n      }\n\n      .ad-banner img {\n        width: 100%;\n        height: 100%;\n        object-fit: cover;\n      }\n\n      .listing-section {\n        background: linear-gradient(180deg, #fff 0%, var(--cream) 100%);\n      }\n\n      .listing-layout {\n        display: grid;\n        grid-template-columns: 265px 1fr;\n        gap: 24px;\n        align-items: start;\n      }\n\n      .filter-box {\n        position: sticky;\n        top: 108px;\n        padding: 20px;\n      }\n\n      .filter-head {\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        margin-bottom: 20px;\n      }\n\n      .filter-head strong {\n        font-size: 18px;\n      }\n\n      .filter-head button {\n        border: 0;\n        color: var(--gold-dark);\n        background: transparent;\n        font-weight: 900;\n        cursor: pointer;\n      }\n\n      .check-list,\n      .filter-stack {\n        display: grid;\n        gap: 13px;\n      }\n\n      .check-list label {\n        display: flex;\n        align-items: center;\n        gap: 9px;\n        color: #34403a;\n        font-size: 14px;\n      }\n\n      .mini-field {\n        display: grid;\n        gap: 8px;\n      }\n\n      .mini-field label {\n        color: var(--muted);\n        font-size: 12px;\n        font-weight: 900;\n      }\n\n      .mini-field select,\n      .mini-field input {\n        width: 100%;\n        padding: 12px;\n        border: 1px solid var(--line);\n        border-radius: 11px;\n        outline: 0;\n        background: #fff;\n      }\n\n      .list-toolbar {\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        gap: 20px;\n        margin-bottom: 18px;\n      }\n\n      .view-toggle {\n        display: flex;\n        gap: 8px;\n      }\n\n      .square-btn {\n        display: grid;\n        place-items: center;\n        width: 43px;\n        height: 43px;\n        border: 1px solid var(--line);\n        border-radius: 12px;\n        background: #fff;\n      }\n\n      .square-btn.active {\n        color: #fff;\n        background: var(--coal);\n      }\n\n      .list-stack {\n        display: grid;\n        gap: 16px;\n      }\n\n      .list-card {\n        display: grid;\n        grid-template-columns: 250px 1fr auto;\n        gap: 18px;\n        padding: 14px;\n        overflow: hidden;\n      }\n\n      .list-card img {\n        width: 250px;\n        height: 165px;\n        object-fit: cover;\n        border-radius: 14px;\n        transition: transform 500ms ease;\n      }\n\n      .list-info {\n        align-self: center;\n      }\n\n      .list-price {\n        display: grid;\n        align-content: space-between;\n        justify-items: end;\n        padding: 6px 2px;\n      }\n\n      .pager {\n        display: flex;\n        justify-content: center;\n        gap: 8px;\n        margin-top: 26px;\n      }\n\n      .pager button {\n        width: 38px;\n        height: 38px;\n        border: 1px solid var(--line);\n        border-radius: 11px;\n        background: #fff;\n      }\n\n      .pager button.active {\n        color: #fff;\n        background: var(--coal);\n      }\n\n      .detail-section {\n        background: #fff;\n      }\n\n      .detail-layout {\n        display: grid;\n        grid-template-columns: minmax(0, 1.55fr) 390px;\n        gap: 28px;\n      }\n\n      .gallery {\n        display: grid;\n        grid-template-columns: repeat(4, 1fr);\n        gap: 10px;\n      }\n\n      .gallery-main {\n        grid-column: 1 / -1;\n        height: 520px;\n        overflow: hidden;\n        border-radius: var(--radius-xl);\n      }\n\n      .gallery-main img,\n      .gallery-thumb img {\n        width: 100%;\n        height: 100%;\n        object-fit: cover;\n      }\n\n      .gallery-thumb {\n        position: relative;\n        height: 118px;\n        overflow: hidden;\n        border-radius: 15px;\n      }\n\n      .gallery-more {\n        position: absolute;\n        inset: 0;\n        display: grid;\n        place-items: center;\n        color: #fff;\n        background: rgba(10, 17, 18, 0.58);\n        font-weight: 900;\n      }\n\n      .detail-copy {\n        margin-top: 34px;\n      }\n\n      .detail-copy p {\n        color: var(--muted);\n        font-size: 1rem;\n        line-height: 1.8;\n      }\n\n      .feature-list {\n        display: grid;\n        gap: 14px;\n        margin: 24px 0 0;\n        padding: 0;\n        list-style: none;\n      }\n\n      .feature-list li::before {\n        content: \"✓\";\n        margin-right: 10px;\n        color: var(--gold-dark);\n        font-weight: 900;\n      }\n\n      .detail-panel {\n        position: sticky;\n        top: 108px;\n        padding: 26px;\n      }\n\n      .detail-panel .property-type {\n        color: var(--gold-dark);\n      }\n\n      .detail-panel h3 {\n        margin: 10px 0;\n        font-family: var(--font-display);\n        font-size: 2.2rem;\n        line-height: 1.05;\n        letter-spacing: -0.04em;\n      }\n\n      .detail-panel .price {\n        display: block;\n        margin: 24px 0 8px;\n        font-size: 2rem;\n      }\n\n      .financing {\n        display: inline-block;\n        margin-bottom: 22px;\n        padding: 8px 11px;\n        border-radius: 9px;\n        color: #6d5221;\n        background: #fff4d9;\n        font-size: 12px;\n      }\n\n      .action-stack {\n        display: grid;\n        gap: 12px;\n      }\n\n      .whatsapp {\n        color: #0f7a3b;\n        border-color: rgba(37, 211, 102, 0.32);\n      }\n\n      .broker-card {\n        margin-top: 18px;\n        padding: 18px;\n      }\n\n      .broker-person {\n        display: flex;\n        align-items: center;\n        gap: 13px;\n        margin-bottom: 15px;\n      }\n\n      .avatar {\n        width: 56px;\n        height: 56px;\n        border-radius: 50%;\n        object-fit: cover;\n      }\n\n      .dashboard-section {\n        color: #fff;\n        background:\n          linear-gradient(130deg, rgba(9, 19, 20, 0.97), rgba(9, 19, 20, 0.84)),\n          url(\"https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&w=1600&q=80\") center/cover;\n      }\n\n      .dashboard-grid {\n        display: grid;\n        grid-template-columns: 280px 1fr;\n        gap: 26px;\n        align-items: stretch;\n      }\n\n      .dashboard-nav {\n        padding: 24px;\n        border-radius: var(--radius-xl);\n        background: rgba(255, 255, 255, 0.08);\n        backdrop-filter: blur(18px);\n      }\n\n      .dashboard-nav .brand {\n        margin-bottom: 30px;\n      }\n\n      .dash-menu {\n        display: grid;\n        gap: 8px;\n      }\n\n      .dash-menu span {\n        padding: 13px 14px;\n        border-radius: 13px;\n        color: rgba(255, 255, 255, 0.72);\n        font-weight: 800;\n      }\n\n      .dash-menu span.active {\n        color: #fff;\n        background: rgba(255, 255, 255, 0.14);\n      }\n\n      .dashboard-board {\n        padding: 26px;\n        border-radius: var(--radius-xl);\n        color: var(--ink);\n        background: #f9faf7;\n        box-shadow: var(--shadow);\n      }\n\n      .dashboard-head {\n        display: flex;\n        justify-content: space-between;\n        align-items: center;\n        gap: 16px;\n        margin-bottom: 22px;\n      }\n\n      .metric-grid {\n        display: grid;\n        grid-template-columns: repeat(4, 1fr);\n        gap: 14px;\n        margin-bottom: 18px;\n      }\n\n      .metric {\n        padding: 18px;\n        border: 1px solid var(--line);\n        border-radius: 16px;\n        background: #fff;\n      }\n\n      .metric small {\n        color: var(--muted);\n        font-weight: 900;\n      }\n\n      .metric strong {\n        display: block;\n        margin-top: 8px;\n        font-size: 2rem;\n      }\n\n      .dashboard-columns {\n        display: grid;\n        grid-template-columns: 1.2fr 0.9fr;\n        gap: 16px;\n      }\n\n      .dashboard-card {\n        padding: 18px;\n      }\n\n      .activity,\n      .popular {\n        display: grid;\n        gap: 13px;\n      }\n\n      .activity-row,\n      .popular-row {\n        display: grid;\n        grid-template-columns: auto 1fr auto;\n        gap: 12px;\n        align-items: center;\n        padding: 10px;\n        border-radius: 14px;\n        background: #fbfbf9;\n      }\n\n      .dot {\n        display: grid;\n        place-items: center;\n        width: 34px;\n        height: 34px;\n        border-radius: 12px;\n        color: #fff;\n        background: var(--gold);\n        font-size: 13px;\n        font-weight: 900;\n      }\n\n      .popular-row img {\n        width: 70px;\n        height: 52px;\n        border-radius: 10px;\n        object-fit: cover;\n      }\n\n      .phone-strip {\n        display: grid;\n        grid-template-columns: repeat(3, 1fr);\n        gap: 18px;\n        margin-top: 24px;\n      }\n\n      .phone-card {\n        padding: 22px;\n        color: var(--ink);\n      }\n\n      .phone-card h3 {\n        margin: 0 0 14px;\n      }\n\n      .mini-property {\n        display: grid;\n        grid-template-columns: 86px 1fr auto;\n        gap: 12px;\n        align-items: center;\n        padding: 10px 0;\n        border-bottom: 1px solid var(--line);\n      }\n\n      .mini-property:last-child {\n        border-bottom: 0;\n      }\n\n      .mini-property img {\n        width: 86px;\n        height: 62px;\n        border-radius: 11px;\n        object-fit: cover;\n      }\n\n      .quiz-option {\n        display: flex;\n        align-items: center;\n        gap: 12px;\n        margin-bottom: 12px;\n        padding: 18px;\n        border: 1px solid var(--line);\n        border-radius: 14px;\n        background: #fff;\n      }\n\n      .quiz-option.active {\n        border-color: rgba(201, 144, 45, 0.56);\n        background: #fff8e7;\n      }\n\n      .progress {\n        height: 8px;\n        margin: 28px 0 14px;\n        overflow: hidden;\n        border-radius: 999px;\n        background: #eceae3;\n      }\n\n      .progress span {\n        display: block;\n        width: 18%;\n        height: 100%;\n        background: var(--gold);\n      }\n\n      .brokers {\n        text-align: center;\n      }\n\n      .broker-grid {\n        display: grid;\n        grid-template-columns: repeat(4, 1fr);\n        gap: 22px;\n        margin-top: 28px;\n      }\n\n      .broker-tile {\n        padding: 24px;\n        border: 1px solid var(--line);\n        border-radius: var(--radius-lg);\n        background: #fff;\n      }\n\n      .broker-tile img {\n        width: 88px;\n        height: 88px;\n        margin: 0 auto 14px;\n        border-radius: 50%;\n        object-fit: cover;\n      }\n\n      .site-footer {\n        padding: 56px 0;\n        color: #fff;\n        background: #101a1b;\n      }\n\n      .footer-grid {\n        display: grid;\n        grid-template-columns: 1.4fr repeat(4, 1fr);\n        gap: 36px;\n      }\n\n      .site-footer p,\n      .site-footer a {\n        color: rgba(255, 255, 255, 0.68);\n        line-height: 1.8;\n      }\n\n      .site-footer h4 {\n        margin: 0 0 14px;\n      }\n\n      .footer-links {\n        display: grid;\n        gap: 8px;\n      }\n\n      .float-whats {\n        position: fixed;\n        z-index: 25;\n        right: 24px;\n        bottom: 24px;\n        display: grid;\n        place-items: center;\n        width: 64px;\n        height: 64px;\n        border-radius: 50%;\n        color: #fff;\n        background: var(--green);\n        box-shadow: 0 18px 36px rgba(37, 211, 102, 0.32);\n        font-size: 27px;\n        font-weight: 900;\n      }\n\n      .fade-up {\n        animation: fadeUp 760ms ease both;\n      }\n\n      @keyframes fadeUp {\n        from {\n          opacity: 0;\n          transform: translateY(22px);\n        }\n        to {\n          opacity: 1;\n          transform: translateY(0);\n        }\n      }\n\n      @media (max-width: 1080px) {\n        .nav {\n          display: none;\n        }\n\n        .property-grid,\n        .metric-grid,\n        .broker-grid {\n          grid-template-columns: repeat(2, 1fr);\n        }\n\n        .search-grid,\n        .listing-layout,\n        .detail-layout,\n        .dashboard-grid,\n        .dashboard-columns,\n        .footer-grid {\n          grid-template-columns: 1fr;\n        }\n\n        .filter-box,\n        .detail-panel {\n          position: static;\n        }\n\n        .list-card {\n          grid-template-columns: 210px 1fr;\n        }\n\n        .list-price {\n          grid-column: 1 / -1;\n          grid-template-columns: 1fr auto;\n          align-items: center;\n          justify-items: start;\n        }\n\n        .phone-strip {\n          grid-template-columns: 1fr;\n        }\n      }\n\n      @media (max-width: 720px) {\n        .container {\n          width: min(100% - 24px, 1180px);\n        }\n\n        .topbar {\n          inset: 10px 0 auto;\n        }\n\n        .pill-btn {\n          display: none;\n        }\n\n        .hero {\n          min-height: 760px;\n        }\n\n        .hero-content {\n          padding-top: 142px;\n        }\n\n        .hero h1 {\n          font-size: 3.4rem;\n        }\n\n        .search-grid,\n        .stats-grid,\n        .property-grid,\n        .broker-grid,\n        .metric-grid,\n        .ad-banner {\n          grid-template-columns: 1fr;\n        }\n\n        .stats-strip {\n          transform: translateY(-26px);\n        }\n\n        .section {\n          padding: 58px 0;\n        }\n\n        .section-title,\n        .list-toolbar,\n        .dashboard-head {\n          align-items: flex-start;\n          flex-direction: column;\n        }\n\n        .list-card {\n          grid-template-columns: 1fr;\n        }\n\n        .list-card img {\n          width: 100%;\n        }\n\n        .gallery-main {\n          height: 330px;\n        }\n\n        .gallery {\n          grid-template-columns: repeat(2, 1fr);\n        }\n\n        .gallery-main {\n          grid-column: 1 / -1;\n        }\n\n        .footer-grid {\n          gap: 22px;\n        }\n      }\n\n      .route-panel {\n        display: block;\n      }\n\n      .route-panel[aria-hidden=\"true\"] {\n        display: none !important;\n      }\n\n      .nav a.active,\n      .dash-menu button.active {\n        color: #fff;\n        background: rgba(255, 255, 255, 0.14);\n      }\n\n      .nav a.active {\n        background: transparent;\n      }\n\n      .dash-menu button {\n        width: 100%;\n        text-align: left;\n        padding: 13px 14px;\n        border: 0;\n        border-radius: 13px;\n        color: rgba(255, 255, 255, 0.72);\n        background: transparent;\n        font-weight: 800;\n        cursor: pointer;\n      }\n\n      .heart.active {\n        color: #c42a2a;\n        background: rgba(255, 255, 255, 0.98);\n      }\n\n      .route-note {\n        margin-top: 14px;\n        color: var(--muted);\n        font-size: 13px;\n      }\n
-
-      .login-section {
-        min-height: 720px;
-        display: grid;
-        align-items: center;
-        color: #fff;
-        background:
-          linear-gradient(130deg, rgba(9, 19, 20, 0.96), rgba(9, 19, 20, 0.76)),
-          url("https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&w=1600&q=80") center/cover;
-      }
-
-      .login-layout {
-        display: grid;
-        grid-template-columns: 1fr 420px;
-        gap: 48px;
-        align-items: center;
-      }
-
-      .login-copy h2 {
-        margin: 0;
-        font-family: var(--font-display);
-        font-size: clamp(2.6rem, 6vw, 5.8rem);
-        line-height: 0.95;
-        letter-spacing: -0.055em;
-      }
-
-      .login-copy p {
-        max-width: 560px;
-        color: rgba(255, 255, 255, 0.76);
-        font-size: 1.08rem;
-        line-height: 1.8;
-      }
-
-      .login-card {
-        display: grid;
-        gap: 16px;
-        padding: 30px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: var(--radius-xl);
-        background: rgba(255, 255, 255, 0.96);
-        box-shadow: var(--shadow);
-      }
-
-      .login-error {
-        margin: 0;
-        color: #9f1d1d;
-        font-size: 13px;
-        font-weight: 800;
-      }
-
-      .footer-dashboard {
-        display: inline-grid;
-        place-items: center;
-        width: 48px;
-        height: 48px;
-        margin-top: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 16px;
-        color: #fff;
-        background: rgba(201, 144, 45, 0.22);
-        cursor: pointer;
-      }
-
-      .pager button:disabled {
-        opacity: 0.42;
-        cursor: not-allowed;
-      }
-
-      @media (max-width: 1080px) {
-        .login-layout {
-          grid-template-columns: 1fr;
-        }
-      }
-`;
-    document.head.appendChild(style);
+    return;
   }
 
   function brand() {
@@ -646,8 +662,8 @@
                   <div class="broker-card">
                     <strong>Fale com o corretor</strong>
                     <div class="broker-person">
-                      <img class="avatar" src="${brokers[0][2]}" alt="${brokers[0][0]}">
-                      <div><strong>${brokers[0][0]}</strong><div class="location">CRECI 12345</div></div>
+                      <img class="avatar" src="${brokers[0].photo}" alt="${brokers[0].name}">
+                      <div><strong>${brokers[0].name}</strong><div class="location">${brokers[0].creci}</div></div>
                     </div>
                     <button class="ghost-btn" type="button" data-route="comprar">Ver todos os imóveis</button>
                   </div>
@@ -676,11 +692,11 @@
                   </div>
                 </div>
                 <div class="broker-grid">
-                  ${brokers.map(([name, phone, photo]) => `
+                  ${brokers.map((broker) => `
                     <article class="broker-tile">
-                      <img src="${photo}" alt="${name}" loading="lazy">
-                      <strong>${name}</strong>
-                      <div class="location">☎ ${phone}</div>
+                      <img src="${broker.photo}" alt="${broker.name}" loading="lazy">
+                      <strong>${broker.name}</strong>
+                      <div class="location">☎ ${broker.phone}</div>
                     </article>
                   `).join("")}
                 </div>
@@ -726,7 +742,7 @@
                   <div class="dashboard-board">
                     <div class="dashboard-head">
                       <h2>Dashboard</h2>
-                      <div class="broker-person"><img class="avatar" src="${brokers[1][2]}" alt="Admin"><strong>Admin</strong></div>
+                      <div class="broker-person"><img class="avatar" src="${brokers[1].photo}" alt="Admin"><strong>Admin</strong></div>
                     </div>
                     <div class="metric-grid">
                       <div class="metric"><small>Total de imóveis</small><strong>56</strong></div>
@@ -798,56 +814,7 @@
       { id: "reports", label: "Relatorios", icon: "◷" },
       { id: "settings", label: "Configuracoes", icon: "⚙" },
     ];
-    const dashboardState = {
-      metrics: [
-        { label: "Total de imoveis", value: "56" },
-        { label: "Imoveis ativos", value: "42", color: "#1f9b61" },
-        { label: "Leads", value: "128" },
-        { label: "Visitas este mes", value: "1.245" },
-      ],
-      activities: [
-        { icon: "A", title: "Novo lead recebido", detail: "Apartamento no Jardim Armacao", time: "Hoje, 10:23", color: "var(--gold)" },
-        { icon: "G", title: "Agendamento confirmado", detail: "Visita - Casa no Vilarejo", time: "Hoje, 09:15", color: "#24a45a" },
-        { icon: "N", title: "Novo imovel publicado", detail: "Casa em Alphaville", time: "Ontem", color: "#d48a1d" },
-        { icon: "C", title: "Cliente reativado", detail: "Juliana Oliveira pediu retorno", time: "Ontem, 17:40", color: "#4d7bd6" },
-      ],
-      leads: [
-        { name: "Lucas Andrade", source: "Landing page home", interest: "Casa em Condominio Alphaville", stage: "Quente" },
-        { name: "Patricia Souza", source: "WhatsApp", interest: "Apartamento no Jardim Armacao", stage: "Em visita" },
-        { name: "Rafael Lima", source: "Formulario de anuncio", interest: "Casa no Vilarejo", stage: "Qualificando" },
-        { name: "Helena Prado", source: "Quiz mobile", interest: "Terreno em Busca Vida", stage: "Novo" },
-      ],
-      clients: [
-        { name: "Mariana Costa", profile: "Compradora", focus: "3 quartos em Salvador", owner: "Joao Almeida" },
-        { name: "Eduardo Nunes", profile: "Investidor", focus: "Imoveis acima de R$ 1,2 mi", owner: "Carlos Mendes" },
-        { name: "Bianca Ramos", profile: "Locataria", focus: "Apartamento compacto", owner: "Juliana Oliveira" },
-        { name: "Fernando Pires", profile: "Proprietario", focus: "Captacao no litoral", owner: "Mariana Santos" },
-      ],
-      appointments: [
-        { date: "19/06 - 09:30", client: "Lucas Andrade", property: "Casa em Condominio Alphaville", broker: "Joao Almeida" },
-        { date: "19/06 - 14:00", client: "Patricia Souza", property: "Apartamento no Jardim Armacao", broker: "Mariana Santos" },
-        { date: "20/06 - 11:00", client: "Eduardo Nunes", property: "Casa no Vilarejo", broker: "Carlos Mendes" },
-        { date: "20/06 - 16:30", client: "Helena Prado", property: "Terreno em Busca Vida", broker: "Juliana Oliveira" },
-      ],
-      messages: [
-        { from: "Site institucional", subject: "Pedido de retorno comercial", status: "Nao lida" },
-        { from: "WhatsApp", subject: "Cliente quer simular financiamento", status: "Respondida" },
-        { from: "Formulario de anuncio", subject: "Novo imovel para avaliacao", status: "Triagem" },
-        { from: "Instagram", subject: "Pergunta sobre taxa de corretagem", status: "Nao lida" },
-      ],
-      reports: [
-        { title: "Conversao de leads", value: "18%", note: "Alta de 3 pontos na semana" },
-        { title: "Tempo medio ate visita", value: "2,4 dias", note: "Melhor janela em 30 dias" },
-        { title: "Imoveis com maior intencao", value: "Casas premium", note: "Alphaville e Busca Vida lideram" },
-        { title: "Canal com melhor custo", value: "WhatsApp", note: "Maior taxa de resposta organica" },
-      ],
-      settings: [
-        { label: "Aprovacao manual de novos anuncios", value: "Ativada" },
-        { label: "Aviso de lead quente por e-mail", value: "Ativado" },
-        { label: "Sincronizacao com CRM externo", value: "Planejada" },
-        { label: "Relatorio semanal para diretoria", value: "Toda segunda, 08:00" },
-      ],
-    };
+    const dashboardState = dashboardContent;
 
     function getCurrentTab() {
       return tabs.find((tab) => tab.id === activeTab) || tabs[0];
@@ -983,7 +950,7 @@
                   <div class="dashboard-board">
                     <div class="dashboard-head">
                       <h2>${currentTab.label}</h2>
-                      <div class="broker-person"><img class="avatar" src="${brokers[1][2]}" alt="Admin"><strong>Admin</strong></div>
+                      <div class="broker-person"><img class="avatar" src="${brokers[1].photo}" alt="Admin"><strong>Admin</strong></div>
                     </div>
                     ${renderTabPanel()}
                   </div>
@@ -1112,7 +1079,7 @@
       this.route = this.parseRoute();
       this.state = {
         route: this.route,
-        selectedPropertyId: properties[0].id,
+        selectedPropertyId: properties[0]?.id || null,
         favorites: new Set(),
         authenticated: false,
       };
@@ -1360,7 +1327,13 @@
 
   window.SuaImobiliariaSystem = System;
 
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      await loadCmsData();
+    } catch (error) {
+      console.warn("CMS indisponivel, usando dados locais.", error);
+    }
+
     new System("#app");
   });
 })();
