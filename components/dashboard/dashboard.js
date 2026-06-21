@@ -2,8 +2,8 @@
     let activeTab = "overview";
     let crudStatus = "";
     const tabs = [
-      ["overview", "Dashboard"],
-      ...Object.entries(DASHBOARD_COLLECTION_SCHEMAS).map(([id, schema]) => [id, schema.label]),
+      ["overview", "Dashboard", "⌂"],
+      ...Object.entries(DASHBOARD_COLLECTION_SCHEMAS).map(([id, schema], index) => [id, schema.label, ["▣", "◎", "◔", "◫", "◩", "◬", "⚙"][index] || "•"]),
     ];
     const getCollectionItems = (collection) => {
       if (collection === "properties") return properties;
@@ -90,7 +90,7 @@
                     ${brand()}
                     <button class="ghost-btn dashboard-back" type="button" data-route="home">Voltar ao site</button>
                   </div>
-                  <div class="dash-menu">${tabs.map(([id, label]) => `<button class="${id === activeTab ? "active" : ""}" type="button" data-cid="dashboard" data-message="setTab" data-value="${id}">${label}</button>`).join("")}<button type="button" data-cid="dashboard" data-message="logout">Sair</button></div>
+                  <div class="dash-menu">${tabs.map(([id, label, icon]) => `<button class="${id === activeTab ? "active" : ""}" type="button" data-cid="dashboard" data-message="setTab" data-value="${id}"><span class="dash-menu-icon">${icon}</span><span>${label}</span></button>`).join("")}<button type="button" data-cid="dashboard" data-message="logout"><span class="dash-menu-icon">↗</span><span>Sair</span></button></div>
                 </aside>
                 <div class="dashboard-board">
                   <div class="dashboard-head">

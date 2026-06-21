@@ -53,6 +53,9 @@
           done: false,
           value: `
             <section id="imovel" class="section detail-section">
+              <div class="container">
+                <div class="breadcrumb-row"><span>Home</span><span>Comprar</span><span>${property.title}</span></div>
+              </div>
               <div class="container detail-layout">
                 <div>
                   <div class="gallery">
@@ -60,19 +63,32 @@
                     ${galleryImages.slice(1, 4).map((item, index) => renderGalleryItem(item, index + 1)).join("")}
                   </div>
                   <div class="detail-copy">
-                    <span class="eyebrow">Codigo ${property.id}</span>
+                    <span class="eyebrow">${property.type}</span>
                     <h2>${property.title}</h2>
-                    <p>Descricao completa do imovel, com localizacao, atributos comerciais, mapa e contexto de compra.</p>
+                    <p>Projeto pensado para uma rotina sofisticada, com implantacao funcional, acabamentos consistentes e posicionamento forte dentro do bairro.</p>
                     <ul class="feature-list">
                       <li>Area total: ${property.area}m2</li>
                       <li>Area privativa: ${Math.max(property.area - 20, property.area)}m2</li>
                       <li>${property.bedrooms} quartos, ${property.suites} suites, ${property.bathrooms} banheiros e ${property.parking} vagas</li>
                       <li>Condominio ${property.condominium} e IPTU ${property.iptu}</li>
                     </ul>
+                    <div class="detail-tabs">
+                      <span class="active">Sobre o imovel</span>
+                      <span>Caracteristicas</span>
+                      <span>Localizacao</span>
+                      <span>Condominio</span>
+                      <span>Documentacao</span>
+                    </div>
+                    <ul class="detail-bullet-list">
+                      <li>Sala ampla com pe direito duplo</li>
+                      <li>Cozinha integrada com area gourmet</li>
+                      <li>Piscina com deck molhado</li>
+                      <li>Suite master com closet e varanda</li>
+                      <li>Energia solar e aquecimento de agua</li>
+                    </ul>
                   </div>
                 </div>
                 <aside class="detail-panel">
-                  <span class="property-type">${property.type}</span>
                   <h3>${property.title}</h3>
                   <div class="location">${property.city}</div>
                   <div class="meta">${property.meta.map((item) => `<span>${item}</span>`).join("")}</div>
@@ -92,6 +108,7 @@
                   <div class="broker-card">
                     <strong>Corretor responsavel</strong>
                     <div class="broker-person"><img class="avatar" src="${broker.photo}" alt="${broker.name}"><div><strong>${broker.name}</strong><div class="location">${broker.creci}</div></div></div>
+                    <button class="ghost-btn" type="button" data-route="comprar">Ver todos os imoveis</button>
                   </div>
                 </aside>
               </div>

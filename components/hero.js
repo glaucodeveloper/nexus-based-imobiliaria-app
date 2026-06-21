@@ -7,10 +7,12 @@
           done: false,
           value: `
             <section id="home" class="hero">
-              <div class="container hero-content">
-                <span class="eyebrow">Curadoria premium</span>
-                <h1>Encontre o imovel ideal para voce</h1>
-                <p>Casas, apartamentos e terrenos nas melhores localizacoes da cidade, com atendimento consultivo do primeiro clique ate a entrega das chaves.</p>
+              <div class="container hero-shell">
+                <div class="hero-content">
+                  <span class="eyebrow">Curadoria premium</span>
+                  <h1>Encontre o imovel ideal para voce</h1>
+                  <p>Casas, apartamentos e terrenos nas melhores localizacoes da cidade, com atendimento consultivo do primeiro clique ate a entrega das chaves.</p>
+                </div>
                 <div class="search-panel" role="search">
                   <div class="tabs">
                     <button class="tab ${tab === "comprar" ? "active" : ""}" type="button" data-cid="hero" data-message="setTab" data-value="comprar">Comprar</button>
@@ -22,6 +24,11 @@
                     <label class="field"><span>Faixa de preco</span><select><option>Qualquer preco</option><option>Ate R$ 700 mil</option><option>Acima de R$ 1 mi</option></select></label>
                     <button class="gold-btn" type="button" data-route="comprar">Buscar imoveis</button>
                   </div>
+                </div>
+                <div class="hero-trustbar">
+                  <div><strong>+20</strong><span>anos de experiencia</span></div>
+                  <div><strong>124</strong><span>imoveis ativos</span></div>
+                  <div><strong>100%</strong><span>apoio consultivo</span></div>
                 </div>
               </div>
             </section>

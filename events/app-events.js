@@ -130,7 +130,7 @@
       deleteProperty,
       goToRoute: (route, options = {}) => setRoute(route, options),
     };
-    const routeTools = { getRoute };
+    const routeTools = { getRoute, getSession };
 
     add("topbar", TopbarComponent, routeTools);
     add("hero", HeroComponent, routeTools);
@@ -139,6 +139,8 @@
     add("announce", AnnounceComponent, { addLead });
     add("listing", ListingComponent, propertyTools);
     add("detail", DetailComponent, propertyTools);
+    add("favorites", FavoritesComponent, propertyTools);
+    add("quiz", QuizComponent, { addLead });
     add("editor", ProductEditorComponent, {
       getRoute,
       getSelectedProperty: () => properties.find((property) => property.id === routeState.current().selectedPropertyId) || null,
@@ -187,6 +189,8 @@
           ${panel("destaques", route === "destaques" ? renderComponent("featured") : "")}
           ${panel("comprar", route === "comprar" ? renderComponent("listing") : "")}
           ${panel("imovel", route === "imovel" ? `${renderComponent("detail")}${renderComponent("brokers")}` : "")}
+          ${panel("favoritos", route === "favoritos" ? renderComponent("favorites") : "")}
+          ${panel("quiz", route === "quiz" ? renderComponent("quiz") : "")}
           ${panel("anuncie", route === "anuncie" ? renderComponent("announce") : "")}
           ${panel("login", route === "login" ? renderComponent("login") : "")}
           ${panel("contato", route === "contato" ? renderComponent("contact") : "")}

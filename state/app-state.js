@@ -1,7 +1,7 @@
 "use strict";
   "use strict";
 
-  const ROUTES = ["home", "destaques", "comprar", "imovel", "imovel-novo", "imovel-editar", "anuncie", "login", "dashboard", "contato"];
+  const ROUTES = ["home", "destaques", "comprar", "imovel", "favoritos", "quiz", "imovel-novo", "imovel-editar", "anuncie", "login", "dashboard", "contato"];
   const CMS_LOGIN_PASSWORD = "ZKUd4uCQ";
   const CMS_GITHUB_TOKEN = window.SuaImobiliariaCmsConfig?.githubToken || "";
 

@@ -14,7 +14,7 @@
         return {
           done: false,
           value: `
-            <div class="metric-grid">${metrics.map((metric) => `<div class="metric"><small>${metric.label}</small><strong${metric.color ? ` style="color:${metric.color};"` : ""}>${metric.value}</strong></div>`).join("")}</div>
+            <div class="metric-grid">${metrics.map((metric, index) => `<div class="metric metric-${index + 1}"><small>${metric.label}</small><strong${metric.color ? ` style="color:${metric.color};"` : ""}>${metric.value}</strong><span>${index === 0 ? "base total" : index === 1 ? "publicados agora" : index === 2 ? "pipeline atual" : "janela mensal"}</span></div>`).join("")}</div>
             <div class="dashboard-columns">
               ${renderPreview("activities", "Atividades recentes", "activities")}
               ${renderPreview("properties", "Imoveis em destaque", "properties")}

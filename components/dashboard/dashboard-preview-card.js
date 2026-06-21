@@ -11,7 +11,7 @@
         return {
           done: false,
           value: `
-            <article class="dashboard-card">
+            <article class="dashboard-card dashboard-preview-card">
               <div class="dashboard-card-head">
                 <h3>${title}</h3>
                 <button class="ghost-btn" type="button" data-cid="dashboard" data-message="setTab" data-value="${targetTab}">Abrir</button>

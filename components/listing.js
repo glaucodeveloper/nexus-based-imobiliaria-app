@@ -126,8 +126,9 @@
           value: `
             <section id="comprar" class="section listing-section">
               <div class="container">
+                <div class="breadcrumb-row"><span>Home</span><span>Comprar</span></div>
                 <div class="section-title">
-                  <div><span class="eyebrow">Comprar / Alugar / Buscar</span><h2>Imoveis disponiveis</h2><p>Encontramos ${filtered.length} imoveis. Filtros ativos atualizam a URL.</p></div>
+                  <div><span class="eyebrow">Comprar / Alugar / Buscar</span><h2>Imoveis a venda</h2><p>Encontramos ${filtered.length} imoveis. Filtros ativos atualizam a URL e mantem o comparador funcionando.</p></div>
                 </div>
                 <div class="listing-layout">
                   <aside class="filter-box" aria-label="Filtros">
@@ -157,6 +158,10 @@
                         <button class="square-btn ${viewMode === "grid" ? "active" : ""}" type="button" data-cid="listing" data-message="setView" data-value="grid">Grade</button>
                         <button class="square-btn ${viewMode === "list" ? "active" : ""}" type="button" data-cid="listing" data-message="setView" data-value="list">Lista</button>
                       </div>
+                    </div>
+                    <div class="results-meta-strip">
+                      <span>${filtered.length} resultados</span>
+                      <span>${compared.length} em comparacao</span>
                     </div>
                     <div class="${viewMode === "grid" ? "property-grid listing-grid" : "list-stack"}">
                       ${visibleProperties.length ? visibleProperties.map((property) => (viewMode === "grid" ? renderPropertyCard(property) : renderListCard(property))).join("") : `<article class="list-card"><div class="list-info"><h3>Nenhum imovel encontrado</h3><div class="location">Tente limpar filtros.</div></div></article>`}

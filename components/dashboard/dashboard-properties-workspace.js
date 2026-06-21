@@ -8,7 +8,7 @@
           done: false,
           value: `
             <div class="dashboard-columns dashboard-crud-layout">
-              <article class="dashboard-card dashboard-form-card">
+              <article class="dashboard-card dashboard-form-card dashboard-highlight-card">
                 <h3>Novo produto</h3>
                 <p class="location">Abra uma tela de edição baseada na própria página do produto para criar um novo imóvel e publicar no GitHub.</p>
                 <div class="dashboard-form-actions">

@@ -11,7 +11,7 @@
           value: `
             <article class="activity-row dashboard-item-row">
               <span class="dot" style="background:${item.color || "var(--gold)"};">${summary.icon || "•"}</span>
-              <div>
+              <div class="dashboard-item-copy">
                 <strong>${summary.title}</strong>
                 <div class="location">${summary.detail || ""}</div>
                 ${summary.badge ? `<small class="route-note">${summary.badge}</small>` : ""}
