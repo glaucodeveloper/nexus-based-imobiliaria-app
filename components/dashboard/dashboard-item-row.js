@@ -8,9 +8,9 @@
       next() {
         return {
           done: false,
-          value: `
+          value: /*html*/`
             <article class="activity-row dashboard-item-row">
-              <span class="dot" style="background:${item.color || "var(--gold)"};">${summary.icon || "•"}</span>
+              <span class="dot" style="background:${item.color || "var(--gold)"};">${summary.icon || "&#8226;"}</span>
               <div class="dashboard-item-copy">
                 <strong>${summary.title}</strong>
                 <div class="location">${summary.detail || ""}</div>

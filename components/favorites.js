@@ -1,10 +1,11 @@
   const FavoritesComponent = ({ props }) => ({
     next(message = {}) {
       if (message.type === "toggleFavorite") props.toggleFavorite(message.propertyId);
+      const isCompared = (propertyId) => props.isCompared?.(propertyId);
       const favorites = properties.filter((property) => props.isFavorite(property.id));
       return {
         done: false,
-        value: `
+        value: /*html*/`
           <section id="favoritos" class="section dashboard-lite-section">
             <div class="container">
               <div class="utility-hero">
@@ -21,19 +22,19 @@
               </div>
               <div class="favorites-layout">
                 <div class="favorites-stack">
-                  ${favorites.length ? favorites.map((property) => `
+                  ${favorites.length ? favorites.map((property) => /*html*/`
                     <article class="favorite-card">
                       <img src="${property.image}" alt="${property.title}" loading="lazy">
                       <div class="favorite-card-body">
                         <span class="property-type">${property.type}</span>
                         <h3>${property.title}</h3>
                         <div class="location">${property.city}</div>
-                        <div class="meta">${property.meta.map((item) => `<span>${item}</span>`).join("")}</div>
+                        <div class="meta">${property.meta.map((item) => /*html*/`<span>${item}</span>`).join("")}</div>
                         <strong class="price">${property.price}</strong>
                       </div>
                       <div class="favorite-card-actions">
                         <a class="ghost-btn" href="#imovel?propertyId=${encodeURIComponent(property.id)}" data-route="imovel" data-property-id="${property.id}">Ver detalhes</a>
-                        <a class="ghost-btn" href="#comprar" data-route="comprar">Comparar no catálogo</a>
+                        <button class="ghost-btn compare-btn ${isCompared(property.id) ? "active" : ""}" type="button" data-cid="favorites" data-message="toggleCompare" data-property-id="${property.id}">${isCompared(property.id) ? "Comparando" : "Comparar"}</button>
                         <button class="ghost-btn danger-btn" type="button" data-cid="favorites" data-message="toggleFavorite" data-property-id="${property.id}">Remover</button>
                       </div>
                     </article>
@@ -65,3 +66,5 @@
       };
     },
   });
+
+

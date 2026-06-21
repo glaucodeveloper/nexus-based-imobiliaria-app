@@ -32,10 +32,10 @@ WHITE = colors.white
 
 CROPS = {
     "home": (0, 0, 565, 620),
-    "listing": (565, 0, 1036, 612),
+    "listing": (590, 0, 1036, 612),
     "detail": (1036, 0, 1536, 612),
-    "mobile": (570, 600, 1122, 920),
-    "dashboard": (1120, 600, 1536, 920),
+    "mobile": (620, 620, 1130, 910),
+    "dashboard": (1130, 605, 1536, 925),
     "footer": (570, 920, 1536, 1024),
 }
 
@@ -117,17 +117,22 @@ def image_reader_from_crop(box):
     return ImageReader(buffer), crop.size
 
 
-def draw_image_fit(c, reader, image_size, x, y, w, h, radius=18, stroke=True):
+def draw_image_fit(c, reader, image_size, x, y, w, h, radius=18, stroke=True, mode="fit", align_x=0.5, align_y=0.5):
     iw, ih = image_size
-    scale = min(w / iw, h / ih)
+    scale = max(w / iw, h / ih) if mode == "cover" else min(w / iw, h / ih)
     draw_w = iw * scale
     draw_h = ih * scale
-    dx = x + (w - draw_w) / 2
-    dy = y + (h - draw_h) / 2
+    dx = x + (w - draw_w) * align_x
+    dy = y + (h - draw_h) * align_y
 
     c.setFillColor(WHITE)
     c.roundRect(x, y, w, h, radius, stroke=0, fill=1)
+    c.saveState()
+    clip = c.beginPath()
+    clip.roundRect(x, y, w, h, radius)
+    c.clipPath(clip, stroke=0, fill=0)
     c.drawImage(reader, dx, dy, width=draw_w, height=draw_h, preserveAspectRatio=True, mask="auto")
+    c.restoreState()
     if stroke:
         c.setStrokeColor(LINE)
         c.setLineWidth(2)
@@ -161,6 +166,16 @@ def draw_arrow(c, x1, y1, x2, y2, color=GOLD):
     c.drawPath(path, stroke=0, fill=1)
 
 
+def frame_anchor(layout, side, x_pad=0, y_pad=0, ratio=0.5):
+    if side == "left":
+        return layout["crop_x"] + x_pad, layout["crop_y"] + layout["crop_h"] * ratio + y_pad
+    if side == "right":
+        return layout["crop_x"] + layout["crop_w"] + x_pad, layout["crop_y"] + layout["crop_h"] * ratio + y_pad
+    if side == "top":
+        return layout["crop_x"] + layout["crop_w"] * ratio + x_pad, layout["crop_y"] + y_pad
+    return layout["crop_x"] + layout["crop_w"] * ratio + x_pad, layout["crop_y"] + layout["crop_h"] + y_pad
+
+
 def cover_page(c):
     c.setFillColor(INK)
     c.rect(0, 0, PAGE_W, PAGE_H, stroke=0, fill=1)
@@ -180,15 +195,15 @@ def cover_page(c):
     c.drawString(MARGIN, PAGE_H - 318, "a partir do layout")
 
     intro = (
-        "Leitura técnica e comercial da proposta visual, organizada por módulos "
-        "e ligada diretamente aos recortes do design original."
+        "Leitura executiva da proposta visual em quatro páginas: contexto, "
+        "referência completa, mapa de features e provocações para retorno."
     )
     draw_wrapped(c, intro, MARGIN, PAGE_H - 382, 650, 18, 28, colors.HexColor("#DDE5DF"))
 
     labels = [
-        ("01", "Referência visual integral"),
-        ("02", "Mapa de features"),
-        ("03", "Páginas por recorte"),
+        ("01", "Visão geral da proposta"),
+        ("02", "Referência visual integral"),
+        ("03", "Mapa de features"),
         ("04", "Provocações para retorno"),
     ]
     x = MARGIN
@@ -285,37 +300,204 @@ def crop_explainer_page(c, page_no, crop_key, section, title, body, bullets, not
     c.drawString(MARGIN, PAGE_H - 166, title)
     draw_wrapped(c, body, MARGIN, PAGE_H - 202, 470, 14, 21, MUTED)
 
+    layout_map = {
+        "default": {
+            "crop_x": 568,
+            "crop_y": 156,
+            "crop_w": 526,
+            "crop_h": 500,
+            "crop_mode": "fit",
+            "crop_align_x": 0.5,
+            "crop_align_y": 0.5,
+            "panel_x": MARGIN,
+            "panel_y": 118,
+            "panel_w": 454,
+            "panel_h": 310,
+            "panel_title_y": 378,
+            "panel_text_y": 336,
+            "panel_text_w": 340,
+            "bullet_gap": 34,
+            "note_y": 92,
+            "arrows": [
+                {"start": (512, 382), "side": "left", "x_pad": -6, "ratio": 0.80},
+                {"start": (512, 246), "side": "left", "x_pad": -6, "ratio": 0.40},
+            ],
+        },
+        "home": {
+            "crop_x": 568,
+            "crop_y": 150,
+            "crop_w": 530,
+            "crop_h": 506,
+            "crop_mode": "fit",
+            "crop_align_x": 0.5,
+            "crop_align_y": 0.5,
+            "panel_x": MARGIN,
+            "panel_y": 118,
+            "panel_w": 454,
+            "panel_h": 310,
+            "panel_title_y": 378,
+            "panel_text_y": 336,
+            "panel_text_w": 340,
+            "bullet_gap": 34,
+            "note_y": 92,
+            "arrows": [
+                {"start": (512, 392), "side": "left", "x_pad": 26, "ratio": 0.74},
+                {"start": (512, 250), "side": "left", "x_pad": 26, "ratio": 0.16},
+            ],
+        },
+        "listing": {
+            "crop_x": 568,
+            "crop_y": 150,
+            "crop_w": 530,
+            "crop_h": 506,
+            "crop_mode": "fit",
+            "crop_align_x": 0.5,
+            "crop_align_y": 0.5,
+            "panel_x": MARGIN,
+            "panel_y": 118,
+            "panel_w": 454,
+            "panel_h": 310,
+            "panel_title_y": 378,
+            "panel_text_y": 336,
+            "panel_text_w": 340,
+            "bullet_gap": 34,
+            "note_y": 92,
+            "arrows": [
+                {"start": (512, 382), "side": "left", "x_pad": 40, "ratio": 0.48},
+                {"start": (512, 246), "side": "left", "x_pad": 40, "ratio": 0.84},
+            ],
+        },
+        "detail": {
+            "crop_x": 568,
+            "crop_y": 150,
+            "crop_w": 530,
+            "crop_h": 506,
+            "crop_mode": "fit",
+            "crop_align_x": 0.5,
+            "crop_align_y": 0.5,
+            "panel_x": MARGIN,
+            "panel_y": 118,
+            "panel_w": 454,
+            "panel_h": 310,
+            "panel_title_y": 378,
+            "panel_text_y": 336,
+            "panel_text_w": 340,
+            "bullet_gap": 34,
+            "note_y": 92,
+            "arrows": [
+                {"start": (512, 382), "side": "left", "x_pad": 36, "ratio": 0.36},
+                {"start": (512, 246), "side": "left", "x_pad": 36, "ratio": 0.78},
+            ],
+        },
+        "mobile": {
+            "crop_x": 570,
+            "crop_y": 224,
+            "crop_w": 526,
+            "crop_h": 286,
+            "crop_mode": "cover",
+            "crop_align_x": 0.54,
+            "crop_align_y": 0.5,
+            "panel_x": MARGIN,
+            "panel_y": 118,
+            "panel_w": 462,
+            "panel_h": 300,
+            "panel_title_y": 378,
+            "panel_text_y": 338,
+            "panel_text_w": 334,
+            "bullet_gap": 42,
+            "note_y": 92,
+            "arrows": [
+                {"start": (520, 378), "side": "left", "x_pad": 34, "ratio": 0.38},
+                {"start": (520, 236), "side": "left", "x_pad": 34, "ratio": 0.72},
+            ],
+        },
+        "footer": {
+            "crop_x": 568,
+            "crop_y": 390,
+            "crop_w": 526,
+            "crop_h": 70,
+            "crop_mode": "cover",
+            "crop_align_x": 0.5,
+            "crop_align_y": 0.5,
+            "panel_x": MARGIN,
+            "panel_y": 118,
+            "panel_w": 454,
+            "panel_h": 310,
+            "panel_title_y": 378,
+            "panel_text_y": 336,
+            "panel_text_w": 340,
+            "bullet_gap": 34,
+            "note_y": 92,
+            "arrows": [
+                {"start": (512, 382), "side": "left", "x_pad": -6, "ratio": 0.58},
+                {"start": (512, 246), "side": "left", "x_pad": -6, "ratio": 0.40},
+            ],
+        },
+        "dashboard": {
+            "crop_x": 556,
+            "crop_y": 140,
+            "crop_w": 540,
+            "crop_h": 418,
+            "crop_mode": "cover",
+            "crop_align_x": 0.5,
+            "crop_align_y": 0.5,
+            "panel_x": MARGIN,
+            "panel_y": 126,
+            "panel_w": 456,
+            "panel_h": 290,
+            "panel_title_y": 366,
+            "panel_text_y": 326,
+            "panel_text_w": 344,
+            "bullet_gap": 34,
+            "note_y": 84,
+            "arrows": [
+                {"start": (500, 356), "side": "left", "x_pad": 28, "ratio": 0.44},
+                {"start": (500, 228), "side": "left", "x_pad": 28, "ratio": 0.82},
+            ],
+        },
+    }
+    layout = layout_map.get(crop_key, layout_map["default"])
+
     reader, size = image_reader_from_crop(CROPS[crop_key])
-    crop_x = 568
-    crop_w = 526
-    if crop_key == "footer":
-        crop_y = 390
-        crop_h = 70
-    else:
-        crop_y = 156
-        crop_h = 500
-    drawn = draw_image_fit(c, reader, size, crop_x, crop_y, crop_w, crop_h)
+    drawn = draw_image_fit(
+        c,
+        reader,
+        size,
+        layout["crop_x"],
+        layout["crop_y"],
+        layout["crop_w"],
+        layout["crop_h"],
+        mode=layout["crop_mode"],
+        align_x=layout["crop_align_x"],
+        align_y=layout["crop_align_y"],
+    )
 
     c.setFillColor(INK)
-    c.roundRect(MARGIN, 118, 454, 310, 22, stroke=0, fill=1)
+    c.roundRect(layout["panel_x"], layout["panel_y"], layout["panel_w"], layout["panel_h"], 22, stroke=0, fill=1)
     c.setFillColor(WHITE)
     c.setFont(font("sans_bold"), 18)
-    c.drawString(MARGIN + 24, 390, "Leitura do recorte")
-    text_y = 354
+    c.drawString(layout["panel_x"] + 24, layout["panel_title_y"], "Leitura do recorte")
+    text_y = layout["panel_text_y"]
     for idx, bullet in enumerate(bullets, 1):
-        badge(c, MARGIN + 24, text_y - 10, f"{idx:02}", GOLD if idx % 2 else SOFT_INK)
-        text_y = draw_wrapped(c, bullet, MARGIN + 82, text_y + 2, 340, 12.5, 17, colors.HexColor("#DDE5DF"))
-        text_y -= 18
+        badge(c, layout["panel_x"] + 24, text_y - 10, f"{idx:02}", GOLD if idx % 2 else SOFT_INK)
+        text_y = draw_wrapped(
+            c,
+            bullet,
+            layout["panel_x"] + 82,
+            text_y + 2,
+            layout["panel_text_w"],
+            12.5,
+            17,
+            colors.HexColor("#DDE5DF"),
+        )
+        text_y -= layout["bullet_gap"]
 
-    note_y = 92
+    note_y = layout["note_y"]
     c.setFillColor(GOLD_DARK)
     c.setFont(font("sans_bold"), 11)
     c.drawString(MARGIN, note_y, "PONTO DE ATENÇÃO")
     draw_wrapped(c, notes, MARGIN + 128, note_y, 390, 11.5, 16, MUTED)
 
-    # Arrows visually connect the explanatory block to the reference crop.
-    draw_arrow(c, 512, 382, drawn[0] + 18, drawn[1] + drawn[3] - 42)
-    draw_arrow(c, 512, 246, drawn[0] + 18, drawn[1] + drawn[3] * 0.5)
     draw_footer(c, f"{page_no:02}")
 
 
@@ -380,19 +562,6 @@ def main():
     c.showPage()
     feature_page(c)
     c.showPage()
-
-    pages = [
-        ("home", "Recorte 01 - Home", "Aquisição e confiança", "A primeira metade esquerda do layout concentra a promessa principal: encontrar o imóvel ideal com busca clara e reforços de credibilidade.", ["Hero com proposta de valor direta e imagem aspiracional.", "Busca acima da dobra para iniciar jornada de compra ou aluguel.", "Destaques e anúncio de imóvel criam duas rotas comerciais."], "Validar quais campos de busca são essenciais no primeiro acesso."),
-        ("listing", "Recorte 02 - Listagem", "Catálogo e comparação", "A listagem organiza volume de imóveis sem perder clareza. O usuário filtra, compara e entende rapidamente o valor de cada opção.", ["Filtros laterais reduzem ruído para quem já sabe o que procura.", "Cards horizontais favorecem leitura de preço, cidade e atributos.", "Paginação e alternância visual preparam crescimento do acervo."], "Definir dados obrigatórios de cada imóvel para manter consistência."),
-        ("detail", "Recorte 03 - Produto", "Conversão do imóvel", "A página de detalhe transforma interesse em contato. A imagem vende desejo; a lateral resolve ação, preço e corretor.", ["Galeria grande preserva impacto visual do imóvel.", "Resumo com preço, metragem e atributos reduz dúvidas.", "CTAs priorizam visita, WhatsApp e ligação."], "Decidir quais integrações de contato serão reais na primeira entrega."),
-        ("mobile", "Recorte 04 - Mobile", "Fluxos curtos de lead", "Os cards mobile mostram jornadas compactas: favoritos, anúncio de imóvel e quiz. São atalhos de captação em telas pequenas.", ["Favoritos mantêm intenção de compra viva.", "Formulário de anúncio cria canal para captação de imóveis.", "Quiz ajuda o usuário indeciso a iniciar conversa."], "Escolher um fluxo mobile prioritário para implementar primeiro."),
-        ("dashboard", "Recorte 05 - Dashboard", "Operação e gestão", "O painel administrativo dá visibilidade para imóveis, leads, visitas e atividades. É a base para acompanhamento comercial.", ["Métricas resumidas ajudam na rotina de decisão.", "Atividades recentes mostram ritmo de atendimento.", "Ranking de acessos orienta esforço comercial."], "Separar o que será dado real, simulado ou manual no MVP."),
-        ("footer", "Recorte 06 - Rodapé", "Fechamento institucional", "O rodapé fecha a experiência com navegação, ajuda e contato. Ele sustenta confiança e dá caminhos finais ao visitante.", ["Links institucionais reforçam credibilidade.", "Categorias de imóveis mantêm navegação ativa.", "Contato visível reduz abandono no fim da página."], "Confirmar endereço, canais oficiais e links institucionais."),
-    ]
-
-    for index, args in enumerate(pages, 4):
-        crop_explainer_page(c, index, *args)
-        c.showPage()
 
     provocations_page(c)
     c.save()

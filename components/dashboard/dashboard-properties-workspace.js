@@ -6,7 +6,7 @@
       next() {
         return {
           done: false,
-          value: `
+          value: /*html*/`
             <div class="dashboard-columns dashboard-crud-layout">
               <article class="dashboard-card dashboard-form-card dashboard-highlight-card">
                 <h3>Novo produto</h3>

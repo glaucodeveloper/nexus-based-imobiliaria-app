@@ -71,7 +71,7 @@
 
         return {
           done: false,
-          value: `
+          value: /*html*/`
             <section id="quiz" class="section dashboard-lite-section">
               <div class="container">
                 <div class="quiz-layout">
@@ -91,13 +91,13 @@
                           <span class="property-type">${suggestion.type}</span>
                           <h3>${suggestion.title}</h3>
                           <div class="location">${suggestion.city}</div>
-                          <div class="meta">${suggestion.meta.map((item) => `<span>${item}</span>`).join("")}</div>
+                          <div class="meta">${suggestion.meta.map((item) => /*html*/`<span>${item}</span>`).join("")}</div>
                           <strong class="price">${suggestion.price}</strong>
                         </div>
                       </article>
                     ` : `
                       <div class="quiz-options">
-                        ${currentStep.options.map(([value, label]) => `
+                        ${currentStep.options.map(([value, label]) => /*html*/`
                           <button class="quiz-option ${answers[currentStep.id] === value ? "active" : ""}" type="button" data-cid="quiz" data-message="selectOption" data-value="${value}">
                             <span class="quiz-option-mark"></span>
                             <span>${label}</span>
@@ -115,7 +115,7 @@
                     <span class="eyebrow">Preview</span>
                     <h3>Base do mockup</h3>
                     <p>Esta tela segue o bloco inferior central da referencia, mantendo a logica inteira em componentes JS com contrato next().</p>
-                    <div class="quiz-mini-steps">${steps.map((step, index) => `<span class="${index <= stepIndex ? "active" : ""}">${index + 1}</span>`).join("")}</div>
+                    <div class="quiz-mini-steps">${steps.map((step, index) => /*html*/`<span class="${index <= stepIndex ? "active" : ""}">${index + 1}</span>`).join("")}</div>
                   </aside>
                 </div>
               </div>

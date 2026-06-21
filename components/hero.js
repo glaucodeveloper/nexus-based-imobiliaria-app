@@ -1,19 +1,15 @@
-  const HeroComponent = () => {
-    let tab = "comprar";
-    return {
-      next(message = {}) {
-        if (message.type === "setTab") tab = message.value || tab;
-        return {
-          done: false,
-          value: `
-            <section id="home" class="hero">
-              <div class="container hero-shell">
-                <div class="hero-content">
-                  <span class="eyebrow">Curadoria premium</span>
-                  <h1>Encontre o imovel ideal para voce</h1>
-                  <p>Casas, apartamentos e terrenos nas melhores localizacoes da cidade, com atendimento consultivo do primeiro clique ate a entrega das chaves.</p>
-                </div>
-                <div class="search-panel" role="search">
+const HeroComponent = () => {
+  let tab = "comprar";
+  return {
+    next(message = {}) {
+      if (message.type === "setTab") tab = message.value || tab;
+      return {
+        done: false,
+        value: /*html*/`
+          <section id="home" class="hero">
+            <div class="container hero-shell">
+              <div class="hero-stack">
+                <div class="search-panel" role="search" aria-label="Pesquisa principal">
                   <div class="tabs">
                     <button class="tab ${tab === "comprar" ? "active" : ""}" type="button" data-cid="hero" data-message="setTab" data-value="comprar">Comprar</button>
                     <button class="tab ${tab === "alugar" ? "active" : ""}" type="button" data-cid="hero" data-message="setTab" data-value="alugar">Alugar</button>
@@ -31,9 +27,10 @@
                   <div><strong>100%</strong><span>apoio consultivo</span></div>
                 </div>
               </div>
-            </section>
-          `,
-        };
-      },
-    };
+            </div>
+          </section>
+        `,
+      };
+    },
   };
+};

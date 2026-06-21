@@ -10,7 +10,7 @@
       next() {
         return {
           done: false,
-          value: `
+          value: /*html*/`
             <article class="dashboard-card dashboard-preview-card">
               <div class="dashboard-card-head">
                 <h3>${title}</h3>

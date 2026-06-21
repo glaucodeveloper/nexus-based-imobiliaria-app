@@ -13,7 +13,7 @@
         }
         return {
           done: false,
-          value: `
+          value: /*html*/`
             <section id="anuncie" class="section">
               <div class="container">
                 <div class="ad-banner">

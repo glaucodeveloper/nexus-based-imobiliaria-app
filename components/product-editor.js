@@ -7,7 +7,7 @@
       const editableAttrs = `contenteditable="true" spellcheck="false" role="textbox" aria-label="${escapeHtml(label)}" data-cid="editor" data-message="updateField" data-name="${name}" data-type="${type}" data-placeholder="${escapeHtml(label)}" data-empty="${empty ? "true" : "false"}"`;
       const body = empty ? "" : escapeHtml(value);
       const classes = ["editable-surface", className].filter(Boolean).join(" ");
-      return `<${tag} class="${classes}" ${editableAttrs} ${attrs}>${body}</${tag}>`;
+      return /*html*/`<${tag} class="${classes}" ${editableAttrs} ${attrs}>${body}</${tag}>`;
     };
     const renderImageSlot = (property, index, image, label, className = "", mode = "thumb") => {
       const hasImage = Boolean(image);
@@ -26,7 +26,7 @@
           </span>
       ` : "";
       if (mode === "main") {
-      return `
+      return /*html*/`
         <label class="editable-media ${className}" aria-label="${escapeHtml(label)}">
           ${body}
           ${overlay}
@@ -34,7 +34,7 @@
         </label>
       `;
       }
-      return `
+      return /*html*/`
         <button class="editable-media ${className}" type="button" aria-label="${escapeHtml(label)}" data-cid="editor" data-message="promoteImage" data-image-index="${index}">
           ${body}
         </button>
@@ -46,7 +46,7 @@
       const images = Array.isArray(property.images) ? property.images.filter(Boolean) : [];
       const previewImage = property.image || "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=85";
       const thumbs = [images[0] || previewImage, images[1] || "", images[2] || "", images[3] || ""];
-      return `
+      return /*html*/`
         <div>
           <div class="gallery">
             ${renderImageSlot(property, 0, thumbs[0], editMode ? "Imagem principal - editar" : "Imagem principal", "gallery-main", "main")}
@@ -167,7 +167,7 @@
         const fields = DASHBOARD_COLLECTION_SCHEMAS.properties.fields;
         return {
           done: false,
-          value: `
+          value: /*html*/`
             <section id="${editMode ? "imovel-editar" : "imovel-novo"}" class="dashboard-section editor-section">
               <div class="dashboard-shell editor-shell">
                 <aside class="dashboard-nav">

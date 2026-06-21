@@ -8,6 +8,7 @@
       state: {
         route: initialRoute.route,
         selectedPropertyId: initialRoute.propertyId || properties[0]?.id || null,
+        selectedBrokerId: initialRoute.brokerId || null,
       },
       current() {
         return this.state;
@@ -19,6 +20,7 @@
           ...this.state,
           route: message.authenticated || nextRoute !== "dashboard" ? nextRoute : "login",
           selectedPropertyId: message.propertyId || this.state.selectedPropertyId || properties[0]?.id || null,
+          selectedBrokerId: message.brokerId !== undefined ? message.brokerId : this.state.selectedBrokerId,
         };
         return this.state;
       },
@@ -26,6 +28,8 @@
         return this.apply({
           type: "route",
           route,
+          propertyId: options.propertyId,
+          brokerId: options.brokerId,
           propertyId: options.propertyId,
           authenticated: options.authenticated,
         });
@@ -94,10 +98,19 @@
     };
     const getRoute = () => routeState.current().route;
     const getSession = () => sessionState.current();
+    const getSelectedBroker = () => brokers.find((broker) => (broker.id || slugify(broker.name || broker.title || "")) === routeState.current().selectedBrokerId) || brokers[0] || null;
     const addLead = (lead) => dashboardState.addLead(lead);
     let requestRender = () => {};
-    const persistCmsSnapshot = async (nextProperties = properties, nextDashboard = dashboardContent) => {
+    const persistCmsSnapshot = async (nextProperties = properties, nextDashboard = dashboardContent, nextBrokers = brokers) => {
       return saveCmsDataToGitHub(CMS_GITHUB_TOKEN, { properties: nextProperties, brokers, dashboard: nextDashboard });
+    };
+    const saveDashboard = async (nextDashboard = dashboardContent) => {
+      const normalizedDashboard = normalizeDashboardContent(nextDashboard);
+      dashboardContent = normalizedDashboard;
+      dashboardState.state = normalizedDashboard;
+      await persistCmsSnapshot(properties, normalizedDashboard);
+      propsSync();
+      return { message: "Dashboard salvo no CMS." };
     };
     const saveProperty = async (draft, originalId = null) => {
       const normalized = normalizeDashboardItem("properties", draft);
@@ -118,19 +131,51 @@
       propsSync();
       return { message: "Produto removido do GitHub." };
     };
+    const saveBroker = async (draft, originalId = null) => {
+      const normalized = {
+        id: draft.id || (slugify(draft.name || draft.title || "vendedor") || `vendedor-${Date.now()}`),
+        name: draft.name || draft.title || "Vendedor",
+        phone: draft.phone || "",
+        photo: draft.photo || draft.image || "",
+        creci: draft.creci || "",
+        city: draft.city || "",
+        specialty: draft.specialty || draft.role || "",
+        bio: draft.bio || draft.note || "",
+        performance: draft.performance || "",
+        status: draft.status || "Ativo",
+      };
+      const nextBrokers = brokers.slice();
+      const index = originalId ? nextBrokers.findIndex((item) => (item.id || slugify(item.name || item.title || "")) === originalId) : -1;
+      if (index >= 0) nextBrokers.splice(index, 1, normalized);
+      else nextBrokers.unshift(normalized);
+      await persistCmsSnapshot(properties, dashboardContent, nextBrokers);
+      brokers = nextBrokers;
+      propsSync();
+      return { broker: normalized, message: "Vendedor salvo no GitHub." };
+    };
+    const deleteBroker = async (brokerId) => {
+      const nextBrokers = brokers.filter((item) => (item.id || slugify(item.name || item.title || "")) !== brokerId);
+      if (nextBrokers.length === brokers.length) throw new Error("Vendedor nao encontrado.");
+      await persistCmsSnapshot(properties, dashboardContent, nextBrokers);
+      brokers = nextBrokers;
+      propsSync();
+      return { message: "Vendedor removido do GitHub." };
+    };
     const propsSync = () => requestRender();
     const propertyTools = {
       isFavorite: (id) => getSession().favorites.has(id),
       isCompared: (id) => getSession().compare.has(id),
       toggleFavorite: (id) => sessionState.apply({ type: "toggleFavorite", propertyId: id }),
       toggleCompare: (id) => sessionState.apply({ type: "toggleCompare", propertyId: id }),
+      clearCompare: () => sessionState.apply({ type: "clearCompare" }),
+      getCompareSelection: () => [...getSession().compare],
       getSelectedProperty: () => properties.find((property) => property.id === routeState.current().selectedPropertyId) || properties[0],
       addLead,
       saveProperty,
       deleteProperty,
       goToRoute: (route, options = {}) => setRoute(route, options),
     };
-    const routeTools = { getRoute, getSession };
+    const routeTools = { getRoute, getSession, getSelectedBroker };
 
     add("topbar", TopbarComponent, routeTools);
     add("hero", HeroComponent, routeTools);
@@ -149,11 +194,13 @@
       goToRoute: (route, options = {}) => setRoute(route, options),
       editorImage: () => properties[0]?.image || "",
     });
-    add("brokers", BrokersComponent);
+    add("brokers", BrokersComponent, { ...routeTools, saveBroker, deleteBroker, requestRender: () => requestRender(), goToRoute: (route, options = {}) => setRoute(route, options) });
     add("dashboard", DashboardComponentStateful, {
       requestRender: () => requestRender(),
       goToRoute: (route, options = {}) => setRoute(route, options),
       deleteProperty,
+      getSession: () => getSession(),
+      saveDashboard,
     });
     add("login", LoginComponent, {
       login: (email, password) => {
@@ -173,22 +220,26 @@
       const result = components.get(id)?.next();
       return result?.value || "";
     };
-    const panel = (route, html) => `<div ${routeAttrs(getRoute() === route)}>${html}</div>`;
+    const panel = (route, html) => {
+      const offset = route !== "home";
+      return /*html*/`<div class="route-panel${offset ? " route-panel--offset" : ""}" ${routeAttrs(getRoute() === route)}>${html}</div>`;
+    };
     const render = () => {
       const route = getRoute();
       root.classList.toggle("dashboard-mode", route === "dashboard");
       root.classList.toggle("editor-mode", route === "imovel-novo" || route === "imovel-editar");
       if (route === "dashboard" || route === "imovel-novo" || route === "imovel-editar") {
-        root.innerHTML = `${route === "dashboard" ? renderComponent("dashboard") : renderComponent("editor")}`;
+        root.innerHTML = /*html*/`${route === "dashboard" ? renderComponent("dashboard") : renderComponent("editor")}`;
         return;
       }
-      root.innerHTML = `
+      root.innerHTML = /*html*/`
         ${renderComponent("topbar")}
         <main>
           ${panel("home", route === "home" ? `${renderComponent("hero")}${renderComponent("stats")}${renderComponent("featured")}${renderComponent("announce")}${renderComponent("brokers")}` : "")}
           ${panel("destaques", route === "destaques" ? renderComponent("featured") : "")}
           ${panel("comprar", route === "comprar" ? renderComponent("listing") : "")}
           ${panel("imovel", route === "imovel" ? `${renderComponent("detail")}${renderComponent("brokers")}` : "")}
+          ${panel("vendedores", route === "vendedores" || route === "brokers" ? renderComponent("brokers") : "")}
           ${panel("favoritos", route === "favoritos" ? renderComponent("favorites") : "")}
           ${panel("quiz", route === "quiz" ? renderComponent("quiz") : "")}
           ${panel("anuncie", route === "anuncie" ? renderComponent("announce") : "")}
@@ -202,13 +253,19 @@
     requestRender = render;
     const setRoute = (route, options = {}) => {
       const nextRoute = ROUTES.includes(route) ? route : "home";
+      const current = routeState.current();
       const propertyId = options.propertyId || routeState.current().selectedPropertyId || properties[0]?.id || null;
-      routeState.setRoute(nextRoute, { propertyId, authenticated: getSession().authenticated });
+      const hasBrokerId = Object.prototype.hasOwnProperty.call(options, "brokerId");
+      const brokerId = hasBrokerId ? (options.brokerId || null) : routeState.current().selectedBrokerId || null;
+      const sameRoute = current.route === nextRoute && current.selectedPropertyId === propertyId && current.selectedBrokerId === brokerId;
+      if (sameRoute && options.syncHash !== false) return;
+      if (sameRoute) return;
+      routeState.setRoute(nextRoute, { propertyId, brokerId, authenticated: getSession().authenticated });
       if (options.syncHash !== false) {
         const nextHash = nextRoute === "imovel-editar" && propertyId
           ? `#${nextRoute}?propertyId=${encodeURIComponent(propertyId)}`
-          : `#${nextRoute}`;
-        window.history.pushState({ route: nextRoute, propertyId }, "", nextHash);
+          : (brokerId && (nextRoute === "vendedores" || nextRoute === "brokers") ? `#${nextRoute}?brokerId=${encodeURIComponent(brokerId)}` : `#${nextRoute}`);
+        window.history.pushState({ route: nextRoute, propertyId, brokerId }, "", nextHash);
       }
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -246,7 +303,7 @@
       const routeTarget = event.target.closest("[data-route]");
       if (routeTarget) {
         event.preventDefault();
-        setRoute(routeTarget.dataset.route, { propertyId: routeTarget.dataset.propertyId || undefined });
+        setRoute(routeTarget.dataset.route, { propertyId: routeTarget.dataset.propertyId || undefined, brokerId: routeTarget.dataset.brokerId || undefined });
         return;
       }
       const actionTarget = event.target.closest("[data-cid][data-message]");
@@ -268,13 +325,13 @@
     });
     window.addEventListener("popstate", () => {
       const parsed = parseRoute();
-      routeState.apply({ type: "route", route: parsed.route, propertyId: parsed.propertyId, authenticated: getSession().authenticated });
+      routeState.apply({ type: "route", route: parsed.route, propertyId: parsed.propertyId, brokerId: parsed.brokerId || null, authenticated: getSession().authenticated });
       render();
     });
     window.addEventListener("hashchange", () => {
       const parsed = parseRoute();
-      if (parsed.route !== getRoute() || parsed.propertyId !== routeState.current().selectedPropertyId) {
-        setRoute(parsed.route, { propertyId: parsed.propertyId, syncHash: false });
+      if (parsed.route !== getRoute() || parsed.propertyId !== routeState.current().selectedPropertyId || parsed.brokerId !== routeState.current().selectedBrokerId) {
+        setRoute(parsed.route, { propertyId: parsed.propertyId, brokerId: parsed.brokerId || null, syncHash: false });
       }
     });
     if (getRoute() === "dashboard" && !getSession().authenticated) setRoute("login", { syncHash: false });

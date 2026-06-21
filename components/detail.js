@@ -42,7 +42,7 @@
         const renderGalleryItem = (item, index, isMain = false) => {
           const isActive = index === galleryIndex;
           const label = isMain ? "Abrir galeria" : `Abrir imagem ${index + 1}`;
-          return `
+          return /*html*/`
             <button class="gallery-item ${isMain ? "gallery-main" : "gallery-thumb"} ${isActive ? "is-active" : ""}" type="button" data-cid="detail" data-message="openGallery" data-index="${index}" aria-label="${label}">
               <img src="${item}" alt="${property.title} - imagem ${index + 1}" loading="lazy">
               ${!isMain && index === 3 ? `<span class="gallery-more">ver todas</span>` : ""}
@@ -51,7 +51,7 @@
         };
         return {
           done: false,
-          value: `
+          value: /*html*/`
             <section id="imovel" class="section detail-section">
               <div class="container">
                 <div class="breadcrumb-row"><span>Home</span><span>Comprar</span><span>${property.title}</span></div>
@@ -91,7 +91,7 @@
                 <aside class="detail-panel">
                   <h3>${property.title}</h3>
                   <div class="location">${property.city}</div>
-                  <div class="meta">${property.meta.map((item) => `<span>${item}</span>`).join("")}</div>
+                  <div class="meta">${property.meta.map((item) => /*html*/`<span>${item}</span>`).join("")}</div>
                   <strong class="price">${property.price}</strong>
                   <div class="action-stack">
                     <button class="gold-btn" type="button" data-route="contato">Agendar visita</button>

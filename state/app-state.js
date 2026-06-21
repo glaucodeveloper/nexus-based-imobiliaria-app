@@ -1,7 +1,6 @@
 "use strict";
   "use strict";
-
-  const ROUTES = ["home", "destaques", "comprar", "imovel", "favoritos", "quiz", "imovel-novo", "imovel-editar", "anuncie", "login", "dashboard", "contato"];
+  const ROUTES = ["home", "destaques", "comprar", "imovel", "favoritos", "quiz", "imovel-novo", "imovel-editar", "anuncie", "login", "dashboard", "contato", "vendedores", "brokers"];
   const CMS_LOGIN_PASSWORD = "ZKUd4uCQ";
   const CMS_GITHUB_TOKEN = window.SuaImobiliariaCmsConfig?.githubToken || "";
 
@@ -334,15 +333,17 @@
     const [routePart, queryPart = ""] = hash.split("?");
     const route = ROUTES.includes(routePart) ? routePart : "home";
     const params = new URLSearchParams(queryPart);
-    return { route, propertyId: params.get("propertyId") || null };
+    return { route, propertyId: params.get("propertyId") || null, brokerId: params.get("brokerId") || null };
   };
 
-  const brand = () => `<button class="brand" type="button" data-route="home" aria-label="SuaImobiliaria"><span class="brand-mark"></span><span>SuaImobiliaria</span></button>`;
+  const brand = () => /*html*/`<button class="brand" type="button" data-route="home" aria-label="SuaImobiliaria"><span class="brand-mark"></span><span>SuaImobiliaria</span></button>`;
   const active = (currentRoute, route) => (currentRoute === route ? "active" : "");
   const money = (value) => Number(value).toLocaleString("pt-BR");
-  const favoriteMark = (isFavorite) => (isFavorite ? "♥" : "♡");
-  const routeAttrs = (visible) => `class="route-panel" aria-hidden="${visible ? "false" : "true"}" style="display:${visible ? "block" : "none"};"`;
-  const option = (value, selected, label = value) => `<option value="${value}" ${selected === value ? "selected" : ""}>${label}</option>`;
+  const favoriteMark = (isFavorite) => (isFavorite
+    ? /*html*/`<span class="heart-icon" aria-hidden="true">&#10084;</span>`
+    : /*html*/`<span class="heart-icon" aria-hidden="true">&#9825;</span>`);
+  const routeAttrs = (visible) => `aria-hidden="${visible ? "false" : "true"}" style="display:${visible ? "block" : "none"};"`;
+  const option = (value, selected, label = value) => /*html*/`<option value="${value}" ${selected === value ? "selected" : ""}>${label}</option>`;
   const escapeHtml = (value) => String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
   const DASHBOARD_COLLECTION_SCHEMAS = {
@@ -534,8 +535,8 @@
     if (collection === "properties") {
       return {
         title: item.title || item.id || `Imovel ${index + 1}`,
-        detail: `${item.kind || item.type || "Imovel"} · ${item.city || item.neighborhood || ""}`,
-        value: `${item.price || "Sem preco"}${item.area ? ` · ${item.area}m2` : ""}`,
+        detail: `${item.kind || item.type || "Imovel"} &middot; ${item.city || item.neighborhood || ""}`,
+        value:`${item.price || "Sem preco"}${item.area ? ` &middot; ${item.area}m2` : ""}`,
         badge: item.tag || "Imovel",
         icon: item.kind ? item.kind.slice(0, 1).toUpperCase() : "P",
       };
@@ -547,7 +548,7 @@
     if (collection === "appointments") return { title: item.date || `Agendamento ${index + 1}`, detail: item.property || "", value: item.client || "", icon: "A" };
     if (collection === "reports") return { title: item.title || `Relatorio ${index + 1}`, detail: item.note || "", value: item.value || "", icon: "R" };
     if (collection === "settings") return { title: item.label || `Configuracao ${index + 1}`, detail: item.value || "", value: "", icon: "S" };
-    return { title: item.title || item.name || `Item ${index + 1}`, detail: item.detail || "", value: item.value || "", icon: "•" };
+    return { title: item.title || item.name || `Item ${index + 1}`, detail: item.detail || "", value: item.value || "", icon: "&#8226;" };
   };
   const collectionFormTitle = (collection, mode) => `${mode === "edit" ? "Editar" : "Novo"} ${DASHBOARD_COLLECTION_SCHEMAS[collection]?.itemLabel || "item"}`;
   const collectionEmptyItem = (collection) => buildDraftFromItem(collection, {});

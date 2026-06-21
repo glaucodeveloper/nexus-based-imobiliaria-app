@@ -5,7 +5,7 @@
       const favoritesCount = session.favorites?.size || 0;
       return {
         done: false,
-        value: `
+        value: /*html*/`
           <header class="topbar">
             <div class="topbar-brand-slot">
               ${brand()}
@@ -18,6 +18,7 @@
               <a class="nav-wide ${active(route, "anuncie")}" href="#anuncie" data-route="anuncie"><span>Anuncie</span><span>seu imovel</span></a>
               <a class="${active(route, "favoritos")}" href="#favoritos" data-route="favoritos">Favoritos</a>
               <a class="${active(route, "quiz")}" href="#quiz" data-route="quiz">Quiz</a>
+              <a class="${active(route, "vendedores")}" href="#vendedores" data-route="vendedores">Vendedores</a>
               <a class="${active(route, "contato")}" href="#contato" data-route="contato">Contato</a>
             </nav>
             <div class="topbar-tools">
