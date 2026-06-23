@@ -7,13 +7,14 @@ const BrokersComponent = ({ props }) => {
   const slugId = (broker) => broker?.id || (String(broker?.name || broker?.title || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""));
   const route = () => props.getRoute?.() || "home";
   const isDirectoryRoute = () => route() === "vendedores" || route() === "brokers";
+  const canDeleteBroker = () => route() === "brokers";
   const getSelectedBroker = () => props.getSelectedBroker?.() || null;
   const getBrokerById = (brokerId) => brokers.find((broker) => slugId(broker) === brokerId) || null;
   const whatsappLink = (phone, text) => {
     const clean = String(phone || "").replace(/\D/g, "");
     return clean ? `https://wa.me/${clean}?text=${encodeURIComponent(text)}` : "#";
   };
-  const brokerAppointments = (broker) => dashboardContent.appointments.filter((item) => item.broker === broker.name);
+  const brokerAppointments = (broker) => dashboardContent.appointments.filter((item) => Array.isArray(item.brokers) ? item.brokers.some((id) => id === (broker.id || slugId(broker.name))) : item.broker === broker.name);
   const brokerProperties = (broker) => properties.filter((item) => String(item.title || "").toLowerCase().includes(String(broker.name || "").split(" ")[0].toLowerCase())).slice(0, 3);
   const openBroker = (brokerId) => props.goToRoute?.("vendedores", { brokerId });
   const openList = () => props.goToRoute?.("vendedores");
@@ -89,7 +90,7 @@ const BrokersComponent = ({ props }) => {
         <div class="broker-card-actions">
           <button class="ghost-btn" type="button" data-cid="brokers" data-message="openBroker" data-broker-id="${slugId(broker)}">Detalhes</button>
           <button class="ghost-btn" type="button" data-cid="brokers" data-message="editBroker" data-broker-id="${slugId(broker)}">Editar</button>
-          <button class="ghost-btn danger-btn" type="button" data-cid="brokers" data-message="deleteBroker" data-broker-id="${slugId(broker)}">Excluir</button>
+          ${canDeleteBroker() ? `<button class="ghost-btn danger-btn" type="button" data-cid="brokers" data-message="deleteBroker" data-broker-id="${slugId(broker)}">Excluir</button>` : ""}
         </div>
       </article>
     `;
@@ -105,7 +106,7 @@ const BrokersComponent = ({ props }) => {
             <p>Cards com acesso ao detalhe completo e ferramentas de cadastro acima da listagem.</p>
           </div>
         </div>
-        ${renderToolbar("CRUD de vendedores", "Crie, edite e remova vendedores diretamente nesta página.", `
+        ${renderToolbar("CRUD de vendedores", "Crie e edite vendedores diretamente nesta página.", `
           <button class="gold-btn" type="button" data-cid="brokers" data-message="newBroker">Novo vendedor</button>
           <button class="ghost-btn" type="button" data-cid="brokers" data-message="refresh">Atualizar lista</button>
         `)}
@@ -159,7 +160,7 @@ const BrokersComponent = ({ props }) => {
                 <div class="broker-action-row">
                   <a class="gold-btn" href="${whatsappLink(broker.phone, `Ola ${broker.name}, gostaria de falar sobre os imoveis disponiveis.`)}" target="_blank" rel="noreferrer">WhatsApp</a>
                   <a class="ghost-btn" href="mailto:contato@suaimobiliaria.com.br">E-mail</a>
-                  <button class="ghost-btn danger-btn" type="button" data-cid="brokers" data-message="deleteBroker" data-broker-id="${slugId(broker)}">Excluir</button>
+                  ${canDeleteBroker() ? `<button class="ghost-btn danger-btn" type="button" data-cid="brokers" data-message="deleteBroker" data-broker-id="${slugId(broker)}">Excluir</button>` : ""}
                 </div>
               </div>
             </div>
@@ -175,7 +176,7 @@ const BrokersComponent = ({ props }) => {
               <div class="dashboard-card broker-detail-panel">
                 <div class="dashboard-card-head"><h3>Agenda recente</h3><span>${appointments.length}</span></div>
                 <div class="broker-timeline">
-                  ${appointments.length ? appointments.map((item) => /*html*/`<article class="timeline-card timeline-card--compact"><div class="timeline-marker"><span class="dot" style="background:var(--gold);">A</span></div><div class="timeline-copy"><strong>${escapeText(item.client || "Cliente")}</strong><p>${escapeText(item.property || "Imovel")}</p><span class="route-note">${escapeText(item.date || "")}${item.time ? ` - ${escapeText(item.time)}` : ""}</span></div></article>`).join("") : `<p class="route-note">Nenhum agendamento ligado a este vendedor.</p>`}
+                  ${appointments.length ? appointments.map((item) => { const clientName = Array.isArray(item.clients) && item.clients.length ? item.clients[0] : (item.client || "Cliente"); const propName = Array.isArray(item.properties) && item.properties.length ? item.properties[0] : (item.property || "Imovel"); return /*html*/`<article class="timeline-card timeline-card--compact"><div class="timeline-marker"><span class="dot" style="background:var(--gold);">A</span></div><div class="timeline-copy"><strong>${escapeText(clientName)}</strong><p>${escapeText(propName)}</p><span class="route-note">${escapeText(item.date || "")}${item.time ? ` - ${escapeText(item.time)}` : ""}</span></div></article>`; }).join("") : `<p class="route-note">Nenhum agendamento ligado a este vendedor.</p>`}
                 </div>
               </div>
             </div>

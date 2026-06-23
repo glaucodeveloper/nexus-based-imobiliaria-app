@@ -9,6 +9,8 @@
         route: initialRoute.route,
         selectedPropertyId: initialRoute.propertyId || properties[0]?.id || null,
         selectedBrokerId: initialRoute.brokerId || null,
+        dashboardTab: initialRoute.dashboardTab || "overview",
+        selectedEntityId: initialRoute.entityId || null,
         operation: initialRoute.operation || "comprar",
       },
       current() {
@@ -22,6 +24,8 @@
           route: message.authenticated || nextRoute !== "dashboard" ? nextRoute : "login",
           selectedPropertyId: message.propertyId || this.state.selectedPropertyId || properties[0]?.id || null,
           selectedBrokerId: message.brokerId !== undefined ? message.brokerId : this.state.selectedBrokerId,
+          dashboardTab: message.dashboardTab || this.state.dashboardTab || "overview",
+          selectedEntityId: message.entityId !== undefined ? message.entityId : this.state.selectedEntityId,
           operation: message.operation || this.state.operation || "comprar",
         };
         return this.state;
@@ -32,6 +36,8 @@
           route,
           propertyId: options.propertyId,
           brokerId: options.brokerId,
+          dashboardTab: options.dashboardTab,
+          entityId: options.entityId,
           operation: options.operation,
           authenticated: options.authenticated,
         });
@@ -75,6 +81,20 @@
       },
     };
 
+    const featuredHoverState = {
+      activeRow: null,
+      activePropertyId: null,
+      activePlacement: "top",
+      swapMode: false,
+      pendingRow: null,
+      pendingPropertyId: null,
+      pendingPlacement: "top",
+      enterLockPropertyId: null,
+      openTimer: null,
+      closeTimer: null,
+      expandTimer: null,
+    };
+
     const dashboardState = {
       state: dashboardContent,
       current() {
@@ -84,7 +104,7 @@
         this.state = {
           ...dashboardContent,
           leads: [lead, ...dashboardContent.leads],
-          activities: [{ icon: "L", title: "Novo lead recebido", detail: lead.interest, time: "Agora", color: "var(--gold)" }, ...dashboardContent.activities],
+          activities: [{ icon: "L", title: "Novo lead recebido", detail: lead.interest, time: "Agora", color: "var(--gold)", properties: [], brokers: [], clients: [] }, ...dashboardContent.activities],
         };
         dashboardContent = this.state;
         return this.state;
@@ -104,7 +124,7 @@
     const addLead = (lead) => dashboardState.addLead(lead);
     let requestRender = () => {};
     const persistCmsSnapshot = async (nextProperties = properties, nextDashboard = dashboardContent, nextBrokers = brokers) => {
-      return saveCmsDataToGitHub(CMS_GITHUB_TOKEN, { properties: nextProperties, brokers, dashboard: nextDashboard });
+      return saveCmsDataToGitHub(CMS_GITHUB_TOKEN, { properties: nextProperties, brokers: nextBrokers, dashboard: nextDashboard });
     };
     const saveDashboard = async (nextDashboard = dashboardContent) => {
       const normalizedDashboard = normalizeDashboardContent(nextDashboard);
@@ -165,6 +185,9 @@
     };
     const propsSync = () => requestRender();
     const propertyTools = {
+      getRouteInfo: () => routeState.current(),
+      getFeaturedHoverState: () => featuredHoverState,
+      getFeaturedScrollState: () => featuredScrollState,
       isFavorite: (id) => getSession().favorites.has(id),
       isCompared: (id) => getSession().compare.has(id),
       toggleFavorite: (id) => sessionState.apply({ type: "toggleFavorite", propertyId: id }),
@@ -177,7 +200,7 @@
       deleteProperty,
       goToRoute: (route, options = {}) => setRoute(route, options),
     };
-    const routeTools = { getRoute, getSession, getSelectedBroker, getRouteInfo: () => routeState.current() };
+    const routeTools = { getRoute, getSession, getSelectedBroker, getRouteInfo: () => routeState.current(), goToRoute: (route, options = {}) => setRoute(route, options) };
 
     add("topbar", TopbarComponent, routeTools);
     add("hero", HeroComponent, routeTools);
@@ -201,7 +224,10 @@
       requestRender: () => requestRender(),
       goToRoute: (route, options = {}) => setRoute(route, options),
       deleteProperty,
+      saveBroker,
+      deleteBroker,
       getSession: () => getSession(),
+      getRouteInfo: () => routeState.current(),
       saveDashboard,
     });
     add("login", LoginComponent, {
@@ -209,12 +235,16 @@
         const ok = email === "admin@suaimobiliaria.com.br" && password === CMS_LOGIN_PASSWORD;
         if (ok) {
           sessionState.apply({ type: "login" });
-          setRoute("dashboard");
+          const currentTab = routeState.current().dashboardTab;
+          setRoute("dashboard", { dashboardTab: currentTab && currentTab !== "overview" ? currentTab : undefined });
         }
         return ok;
       },
     });
     add("contact", ContactComponent, { addLead });
+    add("about", AboutComponent, { ...routeTools });
+    add("editions", DashboardEditionsComponent, { saveDashboard, requestRender: () => requestRender() });
+    add("financing", FinancingComponent, { addLead });
     add("footer", FooterComponent);
     add("floating-whats", FloatingWhatsComponent);
 
@@ -237,16 +267,18 @@
       root.innerHTML = /*html*/`
         ${renderComponent("topbar")}
         <main>
-          ${panel("home", route === "home" ? `${renderComponent("hero")}${renderComponent("stats")}${renderComponent("featured")}${renderComponent("announce")}${renderComponent("brokers")}` : "")}
+          ${panel("home", route === "home" ? `${renderComponent("hero")}${renderComponent("stats")}${renderComponent("featured")}${renderComponent("quiz")}${renderComponent("brokers")}` : "")}
           ${panel("destaques", route === "destaques" ? renderComponent("featured") : "")}
           ${panel("comprar", route === "comprar" ? renderComponent("listing") : "")}
           ${panel("imovel", route === "imovel" ? `${renderComponent("detail")}${renderComponent("brokers")}` : "")}
           ${panel("vendedores", route === "vendedores" || route === "brokers" ? renderComponent("brokers") : "")}
           ${panel("favoritos", route === "favoritos" ? renderComponent("favorites") : "")}
           ${panel("quiz", route === "quiz" ? renderComponent("quiz") : "")}
-          ${panel("anuncie", route === "anuncie" ? renderComponent("announce") : "")}
+          ${panel("anuncie", route === "anuncie" ? renderComponent("quiz") : "")}
           ${panel("login", route === "login" ? renderComponent("login") : "")}
           ${panel("contato", route === "contato" ? renderComponent("contact") : "")}
+          ${panel("sobre", route === "sobre" ? renderComponent("about") : "")}
+          ${panel("financiamento", route === "financiamento" ? renderComponent("financing") : "")}
         </main>
         ${renderComponent("footer")}
         ${renderComponent("floating-whats")}
@@ -259,20 +291,49 @@
       const propertyId = options.propertyId || routeState.current().selectedPropertyId || properties[0]?.id || null;
       const hasBrokerId = Object.prototype.hasOwnProperty.call(options, "brokerId");
       const brokerId = hasBrokerId ? (options.brokerId || null) : routeState.current().selectedBrokerId || null;
-      const sameRoute = current.route === nextRoute && current.selectedPropertyId === propertyId && current.selectedBrokerId === brokerId && current.operation === options.operation;
+      const sameRoute = current.route === nextRoute && current.selectedPropertyId === propertyId && current.selectedBrokerId === brokerId && current.dashboardTab === options.dashboardTab && current.selectedEntityId === options.entityId && current.operation === options.operation;
       if (sameRoute && options.syncHash !== false) return;
       if (sameRoute) return;
-      routeState.setRoute(nextRoute, { propertyId, brokerId, operation: options.operation, authenticated: getSession().authenticated });
+      routeState.setRoute(nextRoute, { propertyId, brokerId, dashboardTab: options.dashboardTab, entityId: options.entityId, operation: options.operation, authenticated: getSession().authenticated });
+      if (nextRoute !== "destaques") {
+        if (document.pointerLockElement) { try { document.exitPointerLock(); } catch (_) {} }
+        if (featuredHoverState.openTimer) clearTimeout(featuredHoverState.openTimer);
+        if (featuredHoverState.closeTimer) clearTimeout(featuredHoverState.closeTimer);
+        if (featuredHoverState.expandTimer) clearTimeout(featuredHoverState.expandTimer);
+        featuredHoverState.openTimer = null;
+        featuredHoverState.closeTimer = null;
+        featuredHoverState.expandTimer = null;
+        featuredHoverState.activeRow = null;
+        featuredHoverState.activePropertyId = null;
+      }
       if (options.syncHash !== false) {
-        const nextHash = nextRoute === "imovel-editar" && propertyId
-          ? `#${nextRoute}?propertyId=${encodeURIComponent(propertyId)}`
-          : (brokerId && (nextRoute === "vendedores" || nextRoute === "brokers") ? `#${nextRoute}?brokerId=${encodeURIComponent(brokerId)}` : `#${nextRoute}${options.operation ? `?operation=${encodeURIComponent(options.operation)}` : ""}`);
-        window.history.pushState({ route: nextRoute, propertyId, brokerId, operation: options.operation || null }, "", nextHash);
+        const query = new URLSearchParams();
+        if (options.operation) query.set("operation", options.operation);
+        if (brokerId && (nextRoute === "vendedores" || nextRoute === "brokers")) query.set("brokerId", brokerId);
+        if (nextRoute === "dashboard") {
+          if (options.dashboardTab) query.set("tab", options.dashboardTab);
+          if (options.entityId) query.set("entityId", options.entityId);
+        }
+        const nextHash = (nextRoute === "imovel" || nextRoute === "imovel-editar") && propertyId
+          ? `#${nextRoute}#${encodeURIComponent(propertyId)}`
+          : `#${nextRoute}${query.toString() ? `?${query.toString()}` : ""}`;
+        window.history.pushState({ route: nextRoute, propertyId, brokerId, dashboardTab: options.dashboardTab || null, entityId: options.entityId || null, operation: options.operation || null }, "", nextHash);
       }
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
-    const fieldsFrom = (form) => Object.fromEntries(new FormData(form).entries());
+    const fieldsFrom = (form) => {
+      const result = {};
+      for (const [key, value] of new FormData(form).entries()) {
+        if (key in result) {
+          if (Array.isArray(result[key])) result[key].push(value);
+          else result[key] = [result[key], value];
+        } else {
+          result[key] = value;
+        }
+      }
+      return result;
+    };
     const dispatch = async (target, event) => {
       const component = components.get(target.dataset.cid);
       if (!component) return;
@@ -280,6 +341,7 @@
       const message = {
         type: target.dataset.message,
         name: target.dataset.name || target.name,
+        direction: target.dataset.direction,
         propertyId: target.dataset.propertyId,
         value: target.dataset.value ?? (target.isContentEditable ? target.textContent : target.value),
         checked: target.checked,
@@ -287,6 +349,7 @@
         target,
         event,
       };
+      const routeBefore = getRoute();
       try {
         const result = component.next(message);
         if (result?.then) await result;
@@ -298,24 +361,217 @@
         setRoute("login");
         return;
       }
-      render();
+      if (getRoute() === routeBefore) render();
     };
 
+    const featuredScrollState = { animating: false, targetRow: null, locked: false, cursorX: 0, cursorY: 0, expandedKey: null };
+    const featuredAnimateScrollToRow = (row) => {
+      const rowEl = root.querySelector(`.featured-showcase-row[data-featured-row="${row}"]`);
+      if (!rowEl || featuredScrollState.animating) return;
+      const rowRect = rowEl.getBoundingClientRect();
+      const viewportCenter = window.innerHeight / 2;
+      const rowCenterY = rowRect.top + rowRect.height / 2;
+      const offset = rowCenterY - viewportCenter;
+      if (Math.abs(offset) < 20) return;
+      featuredScrollState.animating = true;
+      featuredScrollState.targetRow = row;
+      const startY = window.scrollY;
+      const targetY = startY + offset;
+      const duration = 420;
+      const startTime = performance.now();
+      const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+      const step = (now) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        window.scrollTo(0, startY + (targetY - startY) * easeOutCubic(progress));
+        if (progress < 1) requestAnimationFrame(step);
+        else featuredScrollState.animating = false;
+      };
+      requestAnimationFrame(step);
+    };
+    const featuredReleasePointer = () => {
+      if (document.pointerLockElement) { try { document.exitPointerLock(); } catch (_) {} }
+      featuredScrollState.locked = false;
+    };
+    const openFeaturedCard = (card, placement = "top", immediate = false) => {
+      if (!card || featuredScrollState.locked) return;
+      const row = Number(card.dataset.featuredRow);
+      const propertyId = card.dataset.propertyId;
+      if (Number.isNaN(row) || !propertyId) return;
+      const sameRow = featuredHoverState.activeRow === row;
+      const key = `${row}:${propertyId}`;
+      if (featuredScrollState.expandedKey === key) return;
+      if (!sameRow && featuredHoverState.enterLockPropertyId && featuredHoverState.enterLockPropertyId !== propertyId) return;
+      if (featuredHoverState.pendingRow === row && featuredHoverState.pendingPropertyId === propertyId && featuredHoverState.pendingPlacement === placement && featuredHoverState.expandTimer) return;
+      if (featuredHoverState.closeTimer) {
+        clearTimeout(featuredHoverState.closeTimer);
+        featuredHoverState.closeTimer = null;
+      }
+      if (featuredHoverState.expandTimer) {
+        clearTimeout(featuredHoverState.expandTimer);
+        featuredHoverState.expandTimer = null;
+      }
+      if (featuredHoverState.activeRow !== row) {
+        featuredHoverState.activeRow = row;
+        featuredHoverState.activePropertyId = null;
+        featuredHoverState.activePlacement = placement;
+        featuredHoverState.enterLockPropertyId = propertyId;
+        render();
+      }
+      const activate = () => {
+        if (featuredHoverState.activeRow !== row || featuredHoverState.activePropertyId === propertyId) return;
+        featuredHoverState.activePropertyId = propertyId;
+        featuredHoverState.activePlacement = placement;
+        featuredHoverState.enterLockPropertyId = propertyId;
+        featuredHoverState.pendingRow = null;
+        featuredHoverState.pendingPropertyId = null;
+        featuredScrollState.expandedKey = key;
+        render();
+        requestAnimationFrame(() => featuredAnimateScrollToRow(row));
+      };
+      featuredHoverState.pendingRow = row;
+      featuredHoverState.pendingPropertyId = propertyId;
+      featuredHoverState.pendingPlacement = placement;
+      if (immediate) {
+        activate();
+        return;
+      }
+      featuredHoverState.expandTimer = setTimeout(() => {
+        featuredHoverState.expandTimer = null;
+        activate();
+      }, 90);
+    };
+    const closeFeaturedCard = (card, immediate = false) => {
+      if (!card) return;
+      if (featuredScrollState.locked) return;
+      const row = Number(card.dataset.featuredRow);
+      const propertyId = card.dataset.propertyId;
+      if (Number.isNaN(row) || !propertyId) return;
+      if (featuredHoverState.openTimer) {
+        clearTimeout(featuredHoverState.openTimer);
+        featuredHoverState.openTimer = null;
+      }
+      if (featuredHoverState.expandTimer) {
+        clearTimeout(featuredHoverState.expandTimer);
+        featuredHoverState.expandTimer = null;
+      }
+      const release = () => {
+        featuredScrollState.expandedKey = null;
+        featuredHoverState.pendingRow = null;
+        featuredHoverState.pendingPropertyId = null;
+        featuredHoverState.pendingPlacement = "top";
+        featuredHoverState.swapMode = false;
+        featuredHoverState.enterLockPropertyId = null;
+      };
+      if (immediate) {
+        release();
+        return;
+      }
+      featuredHoverState.closeTimer = setTimeout(() => {
+        featuredHoverState.closeTimer = null;
+        release();
+      }, 220);
+    };
+    const featuredForceClose = () => {
+      featuredReleasePointer();
+      featuredScrollState.expandedKey = null;
+      featuredScrollState.animating = false;
+      featuredHoverState.activeRow = null;
+      featuredHoverState.activePropertyId = null;
+      featuredHoverState.activePlacement = "top";
+      featuredHoverState.swapMode = false;
+      featuredHoverState.enterLockPropertyId = null;
+      featuredHoverState.pendingRow = null;
+      featuredHoverState.pendingPropertyId = null;
+      if (featuredHoverState.openTimer) { clearTimeout(featuredHoverState.openTimer); featuredHoverState.openTimer = null; }
+      if (featuredHoverState.closeTimer) { clearTimeout(featuredHoverState.closeTimer); featuredHoverState.closeTimer = null; }
+      if (featuredHoverState.expandTimer) { clearTimeout(featuredHoverState.expandTimer); featuredHoverState.expandTimer = null; }
+      render();
+    };
     root.addEventListener("click", (event) => {
+      if (getRoute() === "destaques") {
+        const featuredCard = event.target.closest("[data-featured-card][data-featured-row]");
+        if (featuredCard && featuredCard.classList.contains("is-active") && !featuredScrollState.locked) {
+          if (!event.target.closest("a, button, [data-cid], input, textarea")) {
+            event.preventDefault();
+            featuredScrollState.locked = true;
+            const cardRect = featuredCard.getBoundingClientRect();
+            featuredScrollState.cursorX = event.clientX || cardRect.left + cardRect.width / 2;
+            featuredScrollState.cursorY = event.clientY || cardRect.top + cardRect.height / 2;
+            try { featuredCard.requestPointerLock(); } catch (_) {}
+            render();
+            requestAnimationFrame(() => {
+              const newCard = root.querySelector(".featured-showcase-card.is-locked");
+              if (newCard) {
+                const newRect = newCard.getBoundingClientRect();
+                const lens = newCard.querySelector(".featured-lens-cursor");
+                if (lens) {
+                  lens.style.left = `${Math.max(newRect.left, Math.min(newRect.right, featuredScrollState.cursorX)) - newRect.left}px`;
+                  lens.style.top = `${Math.max(newRect.top, Math.min(newRect.bottom, featuredScrollState.cursorY)) - newRect.top}px`;
+                }
+              }
+            });
+            return;
+          }
+        }
+      }
       const routeTarget = event.target.closest("[data-route]");
       if (routeTarget) {
         event.preventDefault();
-        setRoute(routeTarget.dataset.route, { propertyId: routeTarget.dataset.propertyId || undefined, brokerId: routeTarget.dataset.brokerId || undefined, operation: routeTarget.dataset.operation || undefined });
+        setRoute(routeTarget.dataset.route, { propertyId: routeTarget.dataset.propertyId || undefined, brokerId: routeTarget.dataset.brokerId || undefined, dashboardTab: routeTarget.dataset.dashboardTab || undefined, entityId: routeTarget.dataset.entityId || undefined, operation: routeTarget.dataset.operation || undefined });
         return;
       }
       const actionTarget = event.target.closest("[data-cid][data-message]");
       if (actionTarget && actionTarget.tagName !== "FORM" && !actionTarget.isContentEditable && !(actionTarget.tagName === "INPUT" && actionTarget.type === "file")) void dispatch(actionTarget, event);
     });
-    root.addEventListener("change", (event) => {
+    document.addEventListener("mousemove", (event) => {
+      if (!featuredScrollState.locked || !document.pointerLockElement) return;
+      const card = root.querySelector(".featured-showcase-card.is-locked");
+      if (!card) return;
+      featuredScrollState.cursorX += event.movementX;
+      featuredScrollState.cursorY += event.movementY;
+      const rect = card.getBoundingClientRect();
+      featuredScrollState.cursorX = Math.max(rect.left, Math.min(rect.right, featuredScrollState.cursorX));
+      featuredScrollState.cursorY = Math.max(rect.top, Math.min(rect.bottom, featuredScrollState.cursorY));
+      const lens = card.querySelector(".featured-lens-cursor");
+      if (lens) {
+        lens.style.left = `${featuredScrollState.cursorX - rect.left}px`;
+        lens.style.top = `${featuredScrollState.cursorY - rect.top}px`;
+      }
+    });
+    root.addEventListener("pointermove", (event) => {
+      if (featuredScrollState.locked) return;
+      const galleryTarget = event.target.closest(".gallery-main[data-cid='detail'][data-message='openGallery']");
+      if (galleryTarget) {
+        void dispatch(galleryTarget, event);
+        return;
+      }
+      if (getRoute() !== "destaques") return;
+      const card = event.target.closest(".featured-showcase-card[data-featured-row]");
+      if (!card) return;
+      const row = card.closest(".featured-showcase-row");
+      if (!row) return;
+      const rowRect = row.getBoundingClientRect();
+      const placement = event.clientY < rowRect.top + rowRect.height / 2 ? "top" : "bottom";
+      openFeaturedCard(card, placement);
+      if (featuredHoverState.enterLockPropertyId === card.dataset.propertyId && featuredHoverState.activePropertyId === card.dataset.propertyId) {
+        featuredHoverState.enterLockPropertyId = null;
+      }
+    });
+    root.addEventListener("mouseout", (event) => {
+      if (getRoute() !== "destaques") return;
+      const card = event.target.closest(".featured-showcase-card[data-featured-row]");
+      if (!card) return;
+      if (card.classList.contains("is-active")) {
+        const relatedCard = event.relatedTarget?.closest?.(".featured-showcase-card[data-featured-row]");
+        if (relatedCard && relatedCard.dataset.featuredRow === card.dataset.featuredRow) return;
+      }
+      closeFeaturedCard(card);
+    });
+    root.addEventListener("input", (event) => {
       const actionTarget = event.target.closest("[data-cid][data-message]");
       if (actionTarget) void dispatch(actionTarget, event);
     });
-    root.addEventListener("input", (event) => {
+    root.addEventListener("change", (event) => {
       const actionTarget = event.target.closest("[data-cid][data-message]");
       if (actionTarget) void dispatch(actionTarget, event);
     });
@@ -327,17 +583,26 @@
     });
     window.addEventListener("popstate", () => {
       const parsed = parseRoute();
-      routeState.apply({ type: "route", route: parsed.route, propertyId: parsed.propertyId, brokerId: parsed.brokerId || null, operation: parsed.operation || null, authenticated: getSession().authenticated });
+      routeState.apply({ type: "route", route: parsed.route, propertyId: parsed.propertyId, brokerId: parsed.brokerId || null, dashboardTab: parsed.dashboardTab || null, entityId: parsed.entityId || null, operation: parsed.operation || null, authenticated: getSession().authenticated });
       render();
     });
     window.addEventListener("hashchange", () => {
       const parsed = parseRoute();
-      if (parsed.route !== getRoute() || parsed.propertyId !== routeState.current().selectedPropertyId || parsed.brokerId !== routeState.current().selectedBrokerId || parsed.operation !== routeState.current().operation) {
-        setRoute(parsed.route, { propertyId: parsed.propertyId, brokerId: parsed.brokerId || null, operation: parsed.operation || null, syncHash: false });
+      if (parsed.route !== getRoute() || parsed.propertyId !== routeState.current().selectedPropertyId || parsed.brokerId !== routeState.current().selectedBrokerId || parsed.dashboardTab !== routeState.current().dashboardTab || parsed.entityId !== routeState.current().selectedEntityId || parsed.operation !== routeState.current().operation) {
+        setRoute(parsed.route, { propertyId: parsed.propertyId, brokerId: parsed.brokerId || null, dashboardTab: parsed.dashboardTab || null, entityId: parsed.entityId || null, operation: parsed.operation || null, syncHash: false });
       }
     });
-    if (getRoute() === "dashboard" && !getSession().authenticated) setRoute("login", { syncHash: false });
-    else render();
+    document.addEventListener("pointerlockchange", () => {
+      if (!document.pointerLockElement && featuredScrollState.locked) {
+        featuredScrollState.locked = false;
+        featuredForceClose();
+      }
+    });
+    if (getRoute() === "dashboard" && !getSession().authenticated) {
+      routeState.apply({ type: "route", route: "login", propertyId: null, brokerId: null, dashboardTab: null, entityId: null, operation: null, authenticated: false });
+      window.history.replaceState({ route: "login" }, "", "#login");
+      render();
+    } else render();
     return { next: (message = {}) => (message.type === "render" ? render() : routeState.apply(message)), states: { routeState, sessionState, dashboardState } };
   };
 
@@ -350,6 +615,36 @@
       })
       .then(() => bootApp("#app"));
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

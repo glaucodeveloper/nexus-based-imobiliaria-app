@@ -17,7 +17,7 @@ const DashboardOverviewComponent = ({ props }) => {
             </article>
             <article class="dashboard-card dashboard-preview-card">
               <div class="dashboard-card-head"><h3>Agenda do dia</h3><button class="ghost-btn" type="button" data-cid="dashboard" data-message="setTab" data-value="appointments">Abrir</button></div>
-              <div class="calendar-list calendar-list--compact">${appointments.slice(0, 3).map((appointment) => /*html*/`<article class="calendar-item calendar-item--compact"><div><strong>${escapeText(appointment.client || "Cliente")}</strong><p>${escapeText(appointment.property || "Imovel")}</p></div><span class="route-note">${escapeText(appointment.date || "")}</span></article>`).join("")}</div>
+              <div class="calendar-list calendar-list--compact">${appointments.slice(0, 3).map((appointment) => { const clientName = Array.isArray(appointment.clients) && appointment.clients.length ? appointment.clients[0] : "Cliente"; const propName = Array.isArray(appointment.properties) && appointment.properties.length ? appointment.properties[0] : "Imovel"; return /*html*/`<article class="calendar-item calendar-item--compact"><div><strong>${escapeText(clientName)}</strong><p>${escapeText(propName)}</p></div><span class="route-note">${escapeText(appointment.date || "")}</span></article>`; }).join("")}</div>
             </article>
           </div>
           <div class="dashboard-columns dashboard-columns--wide">

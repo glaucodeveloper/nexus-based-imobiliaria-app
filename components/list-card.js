@@ -1,4 +1,4 @@
-﻿const ListCardComponent = ({ props }) => ({
+const ListCardComponent = ({ props }) => ({
   next() {
     const property = props.property;
     const tools = props.tools || {};
@@ -6,7 +6,7 @@
     const compared = tools.isCompared?.(property.id);
     const isListing = tools.componentId === "listing";
     const titleLink = isListing
-      ? `<a class="property-title-link" href="#imovel?propertyId=${encodeURIComponent(property.id)}" data-route="imovel" data-property-id="${property.id}">${property.title}</a>`
+      ? `<a class="property-title-link" href="#imovel#${encodeURIComponent(property.id)}" data-route="imovel" data-property-id="${property.id}">${property.title}</a>`
       : property.title;
     return {
       done: false,
@@ -30,3 +30,4 @@
     };
   },
 });
+

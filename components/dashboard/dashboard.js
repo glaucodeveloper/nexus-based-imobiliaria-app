@@ -1,8 +1,9 @@
-const DashboardComponentStateful = ({ props }) => {
-  let activeTab = "overview";
+﻿const DashboardComponentStateful = ({ props }) => {
+  let activeTab = props.getRouteInfo?.().dashboardTab || "overview";
   let crudStatus = "";
   let clientAttachmentRows = 2;
-  let appointmentModalOpen = false;
+  let crudWorkspace = null;
+  const viewModes = { clients: "grid", brokers: "grid", properties: "grid", reports: "grid" };
 
   const tabs = [
     ["overview", "Painel", "&#8962;"],
@@ -10,17 +11,25 @@ const DashboardComponentStateful = ({ props }) => {
     ["activities", "Atividades", "&#8635;"],
     ["appointments", "Agendamentos", "&#128197;"],
     ["clients", "Clientes", "&#128100;"],
+    ["brokers", "Vendedores", "&#128101;"],
     ["reports", "Relatorios", "&#128196;"],
     ["properties", "Imoveis", "&#127968;"],
     ["settings", "Configuracoes", "&#9881;"],
+    ["about", "Sobre nos", "&#8505;"],
+    ["editions", "Edicoes", "&#9998;"],
   ];
 
-  const escapeText = (value) => String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  const getRouteInfo = () => props.getRouteInfo?.() || {};
   const getSession = () => props.getSession?.() || { favorites: new Set() };
-  const getCollectionItems = (collection) => (collection === "properties" ? properties : dashboardContent[collection] || []);
+  const schemaLabel = (collection) => DASHBOARD_COLLECTION_SCHEMAS[collection]?.label || collection || "item";
+  const getCollectionItems = (collection) => (collection === "properties" ? properties : collection === "brokers" ? brokers : dashboardContent[collection] || []);
   const setCollectionItems = (collection, items) => {
     if (collection === "properties") {
       properties = normalizeDashboardCollection("properties", items);
+      return;
+    }
+    if (collection === "brokers") {
+      brokers = items;
       return;
     }
     dashboardContent = { ...dashboardContent, [collection]: normalizeDashboardCollection(collection, items) };
@@ -35,8 +44,6 @@ const DashboardComponentStateful = ({ props }) => {
     const reports = getCollectionItems("reports");
     const clients = getCollectionItems("clients");
     const leads = getCollectionItems("leads");
-    const today = new Date().toISOString().slice(0, 10);
-    const todayAppointments = appointments.filter((item) => String(item.date || "").includes(today.slice(8, 10)) || String(item.date || "").includes(today.slice(5, 7))).length;
     return [
       { label: "Imoveis ativos", value: String(properties.length), note: "vitrine publicada" },
       { label: "Leads captados", value: String(leads.length), note: "entradas do site" },
@@ -57,11 +64,11 @@ const DashboardComponentStateful = ({ props }) => {
     ].map((line) => escapePdf(line));
     const stream = ["BT", "/F1 18 Tf", "72 760 Td", `(${escapePdf(report.title || "Relatorio")}) Tj`, "/F1 11 Tf", ...lines.map((line, index) => `${index === 0 ? "0 -26 Td" : "0 -16 Td"} (${line}) Tj`), "ET"].join("\n");
     const objects = [
-      '<< /Type /Catalog /Pages 2 0 R >>',
-      '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
-      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+      "<< /Type /Catalog /Pages 2 0 R >>",
+      "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
       `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`,
-      '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>',
+      "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>",
     ];
     let pdf = "%PDF-1.4\n";
     const offsets = [0];
@@ -88,7 +95,10 @@ const DashboardComponentStateful = ({ props }) => {
       propertiesCount: properties.length,
       attachmentRows: clientAttachmentRows,
       crudStatus,
-      appointmentModalOpen,
+      viewMode: viewModes[collection] || "grid",
+      selectedEntityId: getRouteInfo().selectedEntityId,
+      routeInfo: getRouteInfo(),
+      crudWorkspace,
     },
   }).next().value;
   const renderOverview = () => DashboardOverviewComponent({
@@ -103,22 +113,43 @@ const DashboardComponentStateful = ({ props }) => {
   return {
     next(message = {}) {
       dashboardContent = { ...dashboardContent, metrics: buildMetrics() };
-      if (message.type === "setTab") activeTab = message.value || activeTab;
+      const routeTab = getRouteInfo().dashboardTab || "overview";
+      if (routeTab !== activeTab) activeTab = routeTab;
+      if (message.type === "setTab") {
+        activeTab = message.value || activeTab;
+        crudWorkspace = null;
+        props.goToRoute?.("dashboard", { dashboardTab: activeTab });
+      }
+      if (message.type === "setCollectionView") {
+        viewModes[message.collection] = message.value || viewModes[message.collection] || "grid";
+      }
       if (message.type === "newItem") {
         crudStatus = "";
-        if (message.collection === "appointments") {
-          appointmentModalOpen = true;
-          activeTab = "appointments";
+        crudWorkspace = { collection: message.collection || activeTab, mode: "create", entityId: null };
+        activeTab = crudWorkspace.collection;
+        if (crudWorkspace.collection === "appointments") {
+          props.goToRoute?.("dashboard", { dashboardTab: "appointments" });
+        } else {
+          props.goToRoute?.("dashboard", { dashboardTab: crudWorkspace.collection });
         }
       }
+      if (message.type === "editBroker") {
+        crudWorkspace = { collection: "brokers", mode: "edit", entityId: message.brokerId || null };
+        activeTab = "brokers";
+        props.goToRoute?.("dashboard", { dashboardTab: "brokers", entityId: message.brokerId || null });
+      }
+      if (message.type === "closeCrudWorkspace") crudWorkspace = null;
       if (message.type === "addAttachmentRow") clientAttachmentRows += 1;
       if (message.type === "refreshMetrics") crudStatus = "Metricas fixas calculadas a partir da movimentacao do site.";
       if (message.type === "newActivity") {
-        dashboardContent = { ...dashboardContent, activities: [{ icon: "A", title: "Nova ocorrencia registrada", detail: "Evento manual adicionado ao topo da timeline.", time: "Agora", color: "var(--gold)" }, ...dashboardContent.activities] };
+        dashboardContent = { ...dashboardContent, activities: [{ icon: "A", title: "Nova ocorrencia registrada", detail: "Evento manual adicionado ao topo da timeline.", time: "Agora", color: "var(--gold)", properties: [], brokers: [], clients: [] }, ...dashboardContent.activities] };
         persistDashboard();
       }
-      if (message.type === "jumpToday") activeTab = "appointments";
-      if (message.type === "closeAppointmentModal") appointmentModalOpen = false;
+      if (message.type === "jumpToday") {
+        activeTab = "appointments";
+        crudWorkspace = null;
+        props.goToRoute?.("dashboard", { dashboardTab: "appointments" });
+      }
       if (message.type === "downloadReport") {
         const report = getCollectionItems("reports").find((entry) => entry.id === message.reportId);
         if (report) downloadPdf(report);
@@ -143,9 +174,8 @@ const DashboardComponentStateful = ({ props }) => {
         const itemId = message.itemId;
         const item = getCollectionItems(collection).find((entry) => entry.id === itemId);
         if (item && window.confirm(`Excluir ${item.title || item.name || item.label || "este item"}?`)) {
-          if (collection === "properties") {
-            return props.deleteProperty(itemId).then((result) => { crudStatus = result.message || "Produto removido do GitHub."; props.requestRender?.(); });
-          }
+          if (collection === "properties") return props.deleteProperty(itemId).then((result) => { crudStatus = result.message || "Produto removido do GitHub."; props.requestRender?.(); });
+          if (collection === "brokers") return props.deleteBroker?.(itemId).then((result) => { crudStatus = result.message || "Vendedor removido."; props.requestRender?.(); });
           setCollectionItems(collection, getCollectionItems(collection).filter((entry) => entry.id !== itemId));
           crudStatus = "Item removido localmente.";
           persistDashboard();
@@ -175,16 +205,49 @@ const DashboardComponentStateful = ({ props }) => {
             dashboardContent = { ...dashboardContent, clients: [client, ...dashboardContent.clients] };
             crudStatus = `Cliente ${client.name || "salvo"} cadastrado com ${attachments.length} anexo(s).`;
             clientAttachmentRows = Math.max(2, attachments.length || 2);
+            crudWorkspace = null;
+            props.goToRoute?.("dashboard", { dashboardTab: "clients", entityId: client.id || client.name || null });
             return persistDashboard();
           });
         }
+        if (collection === "brokers") {
+          return props.saveBroker?.(fields).then((result = {}) => {
+            crudStatus = result.message || "Vendedor salvo.";
+            crudWorkspace = null;
+            props.goToRoute?.("dashboard", { dashboardTab: "brokers", entityId: result.broker?.id || fields.id || fields.name || null });
+            props.requestRender?.();
+          });
+        }
         if (collection === "appointments") {
-          const broker = brokers.find((entry) => entry.name === fields.broker);
-          const appointment = normalizeDashboardItem("appointments", { ...fields, phone: fields.phone || broker?.phone || "", status: fields.status || "confirmado" });
+          const appointment = normalizeDashboardItem("appointments", {
+            ...fields,
+            properties: Array.isArray(fields.properties) ? fields.properties : (fields.properties ? String(fields.properties).split(/\r?\n|,/).map((entry) => entry.trim()).filter(Boolean) : []),
+            clients: Array.isArray(fields.clients) ? fields.clients : (fields.clients ? String(fields.clients).split(/\r?\n|,/).map((entry) => entry.trim()).filter(Boolean) : []),
+            brokers: Array.isArray(fields.brokers) ? fields.brokers : (fields.brokers ? String(fields.brokers).split(/\r?\n|,/).map((entry) => entry.trim()).filter(Boolean) : []),
+            status: fields.status || "confirmado",
+          });
           dashboardContent = { ...dashboardContent, appointments: [appointment, ...dashboardContent.appointments] };
-          crudStatus = `Agendamento salvo para ${appointment.client || "cliente"}.`;
-          appointmentModalOpen = false;
+          crudStatus = `Agendamento salvo para ${appointment.date || "nova data"}.`;
+          crudWorkspace = null;
           return persistDashboard();
+        }
+        if (collection === "properties") {
+          const draft = normalizeDashboardItem("properties", fields);
+          crudStatus = "Salvando imovel...";
+          return props.saveProperty?.(draft, fields.id || null).then((result = {}) => {
+            crudStatus = result.message || "Imovel salvo.";
+            crudWorkspace = null;
+            props.goToRoute?.("dashboard", { dashboardTab: "properties", entityId: result.property?.id || draft.id || null });
+            props.requestRender?.();
+          });
+        }
+        const nextItem = normalizeDashboardItem(collection, fields);
+        dashboardContent = { ...dashboardContent, [collection]: [nextItem, ...getCollectionItems(collection)] };
+        crudStatus = `${schemaLabel(collection)} salvo.`;
+        crudWorkspace = null;
+        persistDashboard();
+        if (nextItem?.id || nextItem?.name || nextItem?.title) {
+          props.goToRoute?.("dashboard", { dashboardTab: collection, entityId: nextItem.id || nextItem.name || nextItem.title });
         }
       }
 
@@ -195,9 +258,12 @@ const DashboardComponentStateful = ({ props }) => {
         if (activeTab === "activities") return renderCollectionCard("activities");
         if (activeTab === "appointments") return renderCollectionCard("appointments");
         if (activeTab === "clients") return renderCollectionCard("clients");
+        if (activeTab === "brokers") return renderCollectionCard("brokers");
         if (activeTab === "reports") return renderCollectionCard("reports");
         if (activeTab === "properties") return renderCollectionCard("properties");
         if (activeTab === "settings") return renderCollectionCard("settings");
+        if (activeTab === "about") return AboutComponent({ props: { ...props, getRoute: () => "dashboard" } }).next().value;
+        if (activeTab === "editions") return DashboardEditionsComponent({ props: { ...props, requestRender: () => props.requestRender?.(), saveDashboard: props.saveDashboard } }).next().value;
         return renderOverview();
       };
 
@@ -221,7 +287,7 @@ const DashboardComponentStateful = ({ props }) => {
                   <div>
                     <span class="eyebrow">Area interna</span>
                     <h2>${currentLabel}</h2>
-                    <p>${activeTab === "overview" ? "Visao geral com acesso rapido para os modulos do painel." : activeTab === "properties" ? "Gerencie os produtos com uma toolbar de utilidade e a pagina de edicao ao vivo." : DASHBOARD_COLLECTION_SCHEMAS[activeTab]?.description || "Gestao interna do painel."}</p>
+                    <p>${activeTab === "overview" ? "Visao geral com acesso rapido para os modulos do painel." : activeTab === "properties" ? "Gerencie os produtos com uma toolbar de utilidade e a pagina de edicao ao vivo." : activeTab === "brokers" ? "Equipe comercial com grid/list e CRUD completo." : activeTab === "clients" ? "Base de clientes com ficha e anexos dinamicos." : activeTab === "editions" ? "Edite titulos, textos e imagens das sessoes do site com upload de imagem." : DASHBOARD_COLLECTION_SCHEMAS[activeTab]?.description || "Gestao interna do painel."}</p>
                   </div>
                   <div class="broker-person"><img class="avatar" src="${brokers[1].photo}" alt="Admin"><div><strong>Admin</strong><div class="location">Conteudo do painel</div></div></div>
                 </div>
