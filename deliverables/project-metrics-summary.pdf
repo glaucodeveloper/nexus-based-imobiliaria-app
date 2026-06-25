@@ -1,0 +1,287 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [ 4 0 R 6 0 R ] /Count 2 >>
+endobj
+3 0 obj
+<< /Length 3684 >>
+stream
+BT
+/F1 16 Tf
+1 0 0 1 50 800 Tm
+(Nexus Based Imobiliaria App - Executive Metrics Summary) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 50 778 Tm
+(Generated at 2026-06-25 13:56) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 50 763 Tm
+() Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 748 Tm
+(Useful raw lines: 5149) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 731 Tm
+(Useful chars: 163345) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 714 Tm
+(norm65: 2513.00) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 697 Tm
+(IFPUG-lite: 112 FP) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 680 Tm
+(Project value: R$ 3.280,00) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 50 663 Tm
+() Tj
+ET
+BT
+/F1 13 Tf
+1 0 0 1 50 648 Tm
+(Weighted budget by module) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 629 Tm
+(Visual shared layer: R$ 665,73) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 612 Tm
+(Scope: shell, layout, styles, tokens, entry structure. Weight basis: large technical) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 597 Tm
+(mass, medium architectural relevance, lower direct business criticality. norm65: 696.97.) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 582 Tm
+(Runtime and foundation: R$ 1.065,09) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 565 Tm
+(Scope: app runtime, route handling, shared state, session, data normalization, shared) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 550 Tm
+(shell components. Weight basis: highest architectural importance, high business) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 535 Tm
+(continuity. norm65: 643.57.) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 520 Tm
+(Property discovery: R$ 522,96) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 503 Tm
+(Scope: featured inventory, listing, filtering, comparison, detail, favorites. Weight) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 488 Tm
+(basis: strong user-facing value, relevant search flow. norm65: 356.11.) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 473 Tm
+(Lead capture: R$ 168,01) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 456 Tm
+(Scope: property proposal, announce flow, contact, quiz. Weight basis: commercially) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 441 Tm
+(important, lower code mass. norm65: 137.05.) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 426 Tm
+(Admin and CMS: R$ 774,54) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 409 Tm
+(Scope: login, dashboard, collections, property editor, CMS integration. Weight basis:) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 394 Tm
+(high write-criticality and operational importance. norm65: 466.57.) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 379 Tm
+(PDF utility: R$ 83,67) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 362 Tm
+(Scope: proposal PDF generation support. Weight basis: auxiliary feature, lower runtime) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 347 Tm
+(centrality. norm65: 212.74.) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 50 332 Tm
+() Tj
+ET
+BT
+/F1 13 Tf
+1 0 0 1 50 317 Tm
+(Functional packages) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 298 Tm
+(Discovery and brand: 10 FP - R$ 292,90) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 281 Tm
+(homepage, featured inventory, broker showcase) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 266 Tm
+(Property discovery: 31 FP - R$ 908,00) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 249 Tm
+(listing, filters, compare, detail, favorites) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 234 Tm
+(Lead capture: 27 FP - R$ 790,83) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 217 Tm
+(proposal, announce, contact, quiz) Tj
+ET
+BT
+/F1 11 Tf
+1 0 0 1 50 202 Tm
+(Admin and CMS: 44 FP - R$ 1.288,76) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 70 185 Tm
+(login, dashboard, collection browsing, property CRUD, CMS source) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 50 170 Tm
+() Tj
+ET
+BT
+/F1 13 Tf
+1 0 0 1 50 155 Tm
+(MEI charges) Tj
+ET
+BT
+/F1 10 Tf
+1 0 0 1 50 136 Tm
+(Formula: DAS-MEI de servicos = 5% do salario minimo + R$ 5,00) Tj
+ET
+BT
+/F1 10 Tf
+1 0 0 1 50 120 Tm
+(Assumed minimum wage: R$ 1.621,00) Tj
+ET
+BT
+/F1 10 Tf
+1 0 0 1 50 104 Tm
+(Estimated monthly INSS: R$ 81,05) Tj
+ET
+BT
+/F1 10 Tf
+1 0 0 1 50 88 Tm
+(Estimated monthly DAS-MEI: R$ 86,05) Tj
+ET
+BT
+/F1 10 Tf
+1 0 0 1 50 72 Tm
+(Net after one DAS: R$ 3.193,95) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 50 30 Tm
+(Page 1) Tj
+ET
+endstream
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 3 0 R >>
+endobj
+5 0 obj
+<< /Length 129 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 50 800 Tm
+(Gross to preserve R$ 3.280,00 net: R$ 3.366,05) Tj
+ET
+BT
+/F1 9 Tf
+1 0 0 1 50 30 Tm
+(Page 2) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000015 00000 n 
+0000000085 00000 n 
+0000000150 00000 n 
+0000003886 00000 n 
+0000004012 00000 n 
+0000004192 00000 n 
+0000004318 00000 n 
+trailer
+<< /Size 8 /Root 7 0 R >>
+startxref
+4367
+%%EOF
