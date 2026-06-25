@@ -2,7 +2,7 @@ const QuizComponent = ({ props }) => {
   const steps = [
     {
       id: "goal",
-      question: "Qual e a finalidade?",
+      question: "Encontre seu imóvel",
       options: [
         ["comprar", "Comprar"],
         ["alugar", "Alugar"],

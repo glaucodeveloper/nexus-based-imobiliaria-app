@@ -6,7 +6,9 @@ const FeaturedComponent = ({ props }) => ({
     const isDedicatedPage = route === "destaques";
     const scrollState = props.getFeaturedScrollState?.() || {};
     const expandedId = scrollState.expandedPropertyId || null;
-    const exitEdge = scrollState.exitEdge || null;
+    const expandedHeight = scrollState.expandedHeight || null;
+    const expansionStage = scrollState.expansionStage || null;
+    const showcaseStageClass = expansionStage ? `is-${expansionStage}-stage` : "";
 
     const renderSimpleCard = (property) => {
       const favorite = props.isFavorite(property.id);
@@ -39,7 +41,7 @@ const FeaturedComponent = ({ props }) => ({
       const compared = props.isCompared?.(property.id);
       const isExpanded = expandedId === property.id;
       const isNeighbor = expandedId && !isExpanded;
-      const isLocked = isExpanded && scrollState.locked;
+      const isCompacting = isExpanded && expansionStage === "compact";
       const specs = [
         { label: "Area", value: `${property.area}m2` },
         { label: "Quartos", value: `${property.bedrooms}` },
@@ -49,15 +51,15 @@ const FeaturedComponent = ({ props }) => ({
       const highlights = (property.features || []).slice(0, 3);
       let neighborClass = "";
       if (isNeighbor) {
-        if (exitEdge === "top") neighborClass = "is-exit-top";
-        else if (exitEdge === "bottom") neighborClass = "is-exit-bottom";
-        else if (exitEdge === "left") neighborClass = "is-exit-left";
-        else if (exitEdge === "right") neighborClass = "is-exit-right";
-        else neighborClass = "is-neighbor";
+        const neighborSlots = ["left-top", "right-top", "left-bottom", "right-bottom"];
+        const neighborIndex = properties
+          .slice(0, 4)
+          .filter((item) => item.id !== expandedId)
+          .findIndex((item) => item.id === property.id);
+        neighborClass = neighborIndex >= 0 ? `is-gallery-${neighborSlots[neighborIndex]}` : "";
       }
       return /*html*/`
-        <article class="featured-showcase-card ${isExpanded ? "is-expanded" : ""} ${isNeighbor ? neighborClass : ""} ${compared ? "is-compared" : ""} ${isLocked ? "is-locked" : ""}" data-featured-card data-property-id="${property.id}">
-          <div class="featured-lens-cursor" aria-hidden="true"></div>
+        <article class="featured-showcase-card ${isExpanded ? "is-expanded" : ""} ${isCompacting ? "is-compact" : ""} ${isNeighbor ? `is-neighbor ${neighborClass}` : ""} ${compared ? "is-compared" : ""}" data-featured-card data-property-id="${property.id}">
           <div class="featured-showcase-media">
             <img src="${property.image}" alt="${property.title}" loading="lazy">
             <span class="badge">${property.tag}</span>
@@ -82,7 +84,7 @@ const FeaturedComponent = ({ props }) => ({
             </div>
             <div class="featured-showcase-details">
               <div class="featured-showcase-copy">
-                <p>${property.meta.join(" · ")}</p>
+                <p>${property.meta.join(" &#183; ")}</p>
                 <div class="featured-tags">
                   ${highlights.map((item) => /*html*/`<span>${item}</span>`).join("")}
                 </div>
@@ -100,13 +102,13 @@ const FeaturedComponent = ({ props }) => ({
     return {
       done: false,
       value: /*html*/`
-        <section id="destaques" class="section featured-section ${isDedicatedPage ? "featured-section--showcase" : "featured-section--grid"}">
+        <section id="destaques" class="section featured-section ${isDedicatedPage ? `featured-section--showcase ${showcaseStageClass}` : "featured-section--grid"}" ${isDedicatedPage && expandedHeight ? `style="--featured-expanded-height:${expandedHeight}px"` : ""}>
           <div class="container featured-shell">
             <div class="section-title">
               <div><span class="eyebrow">Destaques</span><h2>Imoveis em destaque</h2><p>Selecionamos as oportunidades mais fortes para voce.</p></div>
               <button class="ghost-btn" type="button" data-route="comprar">Ver todos</button>
             </div>
-            <div class="${isDedicatedPage ? "featured-showcase-grid" : "featured-mini-grid"}">
+            <div class="${isDedicatedPage ? `featured-showcase-grid ${showcaseStageClass}` : "featured-mini-grid"}">
               ${isDedicatedPage ? properties.slice(0, 4).map((property) => renderShowcaseCard(property)).join("") : properties.slice(0, 4).map((property) => renderSimpleCard(property)).join("")}
             </div>
           </div>
@@ -115,3 +117,7 @@ const FeaturedComponent = ({ props }) => ({
     };
   },
 });
+
+
+
+

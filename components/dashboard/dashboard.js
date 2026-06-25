@@ -262,8 +262,8 @@
         if (activeTab === "reports") return renderCollectionCard("reports");
         if (activeTab === "properties") return renderCollectionCard("properties");
         if (activeTab === "settings") return renderCollectionCard("settings");
-        if (activeTab === "about") return AboutComponent({ props: { ...props, getRoute: () => "dashboard" } }).next().value;
-        if (activeTab === "editions") return DashboardEditionsComponent({ props: { ...props, requestRender: () => props.requestRender?.(), saveDashboard: props.saveDashboard } }).next().value;
+        if (activeTab === "about") return props.renderAbout?.() || "";
+        if (activeTab === "editions") return props.renderEditions?.() || "";
         return renderOverview();
       };
 
