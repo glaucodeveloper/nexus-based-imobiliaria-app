@@ -10,6 +10,11 @@ It uses:
 - user-perceived functional size from `IFPUG-lite`
 - weighted value concentration by architectural importance and functional criticality
 
+Generated executive artifacts based on this source:
+
+- [project-budget-table.xlsx](/home/wqsaxz/dev/nexus-based-imobiliaria-app/deliverables/project-budget-table.xlsx)
+- [project-metrics-summary.pdf](/home/wqsaxz/dev/nexus-based-imobiliaria-app/deliverables/project-metrics-summary.pdf)
+
 ## Baseline
 
 - useful raw lines: `5149`
